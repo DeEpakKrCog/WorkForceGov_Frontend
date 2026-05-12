@@ -1,0 +1,19 @@
+<div class="page-header"><h1>Edit Program</h1></div>
+<div class="alert alert-danger" *ngIf="error()">{{error()}}</div>
+<div class="row"><div class="col-lg-8"><div class="table-card p-4">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="row g-3">
+      <div class="col-md-6"><label class="form-label fw-semibold">Program Name</label><input formControlName="programName" class="form-control" required /></div>
+      <div class="col-md-6"><label class="form-label fw-semibold">Type</label><select formControlName="programType" class="form-select"><option value="">-- Select --</option><option *ngFor="let t of types" [value]="t">{{t}}</option></select></div>
+      <div class="col-12"><label class="form-label fw-semibold">Description</label><textarea formControlName="description" class="form-control" rows="3"></textarea></div>
+      <div class="col-md-4"><label class="form-label fw-semibold">Start Date</label><input type="date" formControlName="startDate" class="form-control" /></div>
+      <div class="col-md-4"><label class="form-label fw-semibold">End Date</label><input type="date" formControlName="endDate" class="form-control" /></div>
+      <div class="col-md-4"><label class="form-label fw-semibold">Budget ($)</label><input type="number" formControlName="totalBudget" class="form-control" /></div>
+      <div class="col-md-4"><label class="form-label fw-semibold">Status</label><select formControlName="status" class="form-select"><option value="Active">Active</option><option value="Inactive">Inactive</option></select></div>
+    </div>
+    <div class="d-flex gap-2 mt-4">
+      <button type="submit" class="btn btn-accent" [disabled]="loading()">Save Changes</button>
+      <a routerLink="/program-manager/program-management" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+  </form>
+</div></div></div>

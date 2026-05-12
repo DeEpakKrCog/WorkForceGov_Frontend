@@ -1,0 +1,53 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center fw-bold text-primary" routerLink="/">
+      <i class="bi bi-briefcase-fill me-2"></i>
+      <span>WorkForce<span class="text-dark">Gov</span></span>
+    </a>
+
+    <button 
+      class="navbar-toggler border-0" 
+      type="button" 
+      (click)="toggleMenu()" 
+      [attr.aria-expanded]="isMenuOpen()"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" [class.show]="isMenuOpen()">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link px-3" routerLink="/" routerLinkActive="active" (click)="closeMenu()">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3" href="#about" (click)="closeMenu()">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3" href="#jobs" (click)="closeMenu()">Jobs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3" href="#contact" (click)="closeMenu()">Contact</a>
+        </li>
+      </ul>
+
+      <div class="d-flex align-items-center gap-2">
+        <ng-container *ngIf="!isUserLoggedIn()">
+          <a routerLink="/login" class="btn btn-link text-decoration-none text-dark fw-medium" (click)="closeMenu()">
+            Login
+          </a>
+          <a routerLink="/register" class="btn btn-primary btn-sm px-4 rounded-pill" (click)="closeMenu()">
+            Register
+          </a>
+        </ng-container>
+
+        <div *ngIf="isUserLoggedIn()" class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2" type="button">
+            <i class="bi bi-person-circle"></i>
+            <span>Profile</span>
+          </button>
+          <button class="btn btn-danger btn-sm ms-2" (click)="logout()">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

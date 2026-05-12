@@ -1,0 +1,30 @@
+<div class="page-header"><h1>Government Auditor Dashboard</h1><p>Program audits and compliance oversight</p></div>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<ng-container *ngIf="data">
+  <div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="bi bi-clipboard-data"></i></div><div class="stat-value">{{data.totalAudits}}</div><div class="stat-label">Total Audits</div></div></div>
+    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:#d97706;"><i class="bi bi-hourglass"></i></div><div class="stat-value">{{data.openAudits}}</div><div class="stat-label">Open Audits</div></div></div>
+    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="bi bi-check-circle"></i></div><div class="stat-value">{{data.completedAudits}}</div><div class="stat-label">Completed</div></div></div>
+    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#fee2e2;color:#dc2626;"><i class="bi bi-x-octagon"></i></div><div class="stat-value">{{data.nonCompliant}}</div><div class="stat-label">Non-Compliant</div></div></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-7"><div class="table-card">
+      <div class="card-header-custom"><span><i class="bi bi-clipboard-data me-2"></i>Recent Audits</span><a routerLink="/gov-auditor/audit-reports" class="btn btn-sm btn-accent">View All</a></div>
+      <table class="table table-hover mb-0"><thead><tr><th>Scope</th><th>Findings</th><th>Date</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let a of data.recentAudits"><td><strong>{{a.scope}}</strong></td><td style="font-size:.82rem;color:#64748b;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{a.findings ?? '—'}}</td><td>{{a.date | date:'MMM dd'}}</td><td><span class="badge-status" [class]="statusBadge(a.status)">{{a.status}}</span></td></tr>
+        <tr *ngIf="!data.recentAudits.length"><td colspan="4" class="text-center text-muted py-4">No audits yet.</td></tr>
+      </tbody></table>
+    </div></div>
+    <div class="col-lg-5"><div class="table-card">
+      <div class="card-header-custom"><span><i class="bi bi-kanban me-2"></i>Active Programs</span><a routerLink="/gov-auditor/workforce-programs" class="btn btn-sm btn-accent">View All</a></div>
+      <div style="padding:8px 16px;">
+        <div *ngFor="let p of data.programs" style="padding:12px 0;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;">
+          <div><div class="fw-semibold" style="font-size:.875rem;">{{p.programName}}</div><div style="font-size:.75rem;color:#64748b;">{{p.programType}}</div></div>
+          <span class="badge-status" [class.bs-success]="p.status==='Active'" [class.bs-secondary]="p.status!=='Active'">{{p.status}}</span>
+        </div>
+        <div *ngIf="!data.programs.length" class="text-muted text-center py-3">No programs.</div>
+      </div>
+    </div></div>
+  </div>
+</ng-container>

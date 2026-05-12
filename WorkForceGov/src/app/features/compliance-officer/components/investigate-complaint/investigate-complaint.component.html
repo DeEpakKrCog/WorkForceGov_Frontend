@@ -1,0 +1,14 @@
+<div class="page-header"><h1><i class="bi bi-chat-square-text me-2"></i>Investigate Complaints</h1></div>
+<div class="alert alert-success alert-dismissible" *ngIf="msg">{{msg}}<button class="btn-close" (click)="msg=''"></button></div>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="table-card" *ngIf="!loading"><table class="table table-hover mb-0"><thead><tr><th>Complaint</th><th>Filed By</th><th>Employer</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+<tbody>
+  <tr *ngFor="let c of complaints">
+    <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{c.complaintDescription}}</td>
+    <td>{{c.user?.fullName ?? '—'}}</td><td>{{c.employer?.companyName ?? '—'}}</td>
+    <td>{{c.submittedDate | date:'MMM dd, yyyy'}}</td>
+    <td><span class="badge-status" [class]="statusBadge(c.status)">{{c.status}}</span></td>
+    <td><button *ngIf="c.status !== 'Resolved'" class="btn btn-sm btn-accent" (click)="resolve(c.id)"><i class="bi bi-check-circle me-1"></i>Resolve</button></td>
+  </tr>
+  <tr *ngIf="!complaints.length"><td colspan="6" class="text-center text-muted py-5">No complaints on record.</td></tr>
+</tbody></table></div>

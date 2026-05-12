@@ -1,0 +1,15 @@
+<div class="page-header d-flex justify-content-between align-items-center">
+  <div><h1>Training Management</h1><p>Manage training sessions</p></div>
+  <a routerLink="/program-manager/create-training" class="btn btn-accent"><i class="bi bi-plus-circle me-1"></i>New Training</a>
+</div>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="table-card" *ngIf="!loading"><table class="table table-hover mb-0"><thead><tr><th>Title</th><th>Program</th><th>Start</th><th>End</th><th>Action</th></tr></thead>
+<tbody>
+  <tr *ngFor="let t of trainings">
+    <td><strong>{{t.title}}</strong><br/><span style="font-size:.75rem;color:#64748b;">{{t.description}}</span></td>
+    <td>{{t.program?.programName ?? '—'}}</td>
+    <td>{{t.startDate | date:'MMM dd, yyyy'}}</td><td>{{t.endDate | date:'MMM dd, yyyy'}}</td>
+    <td><a [routerLink]="['/program-manager/edit-training', t.id]" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil me-1"></i>Edit</a></td>
+  </tr>
+  <tr *ngIf="!trainings.length"><td colspan="5" class="text-center text-muted py-5"><i class="bi bi-mortarboard fs-1 d-block mb-2"></i>No trainings yet.</td></tr>
+</tbody></table></div>

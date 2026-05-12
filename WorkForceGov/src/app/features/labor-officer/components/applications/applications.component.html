@@ -1,0 +1,17 @@
+<div class="page-header"><h1><i class="bi bi-file-text me-2"></i>All Applications</h1></div>
+<div class="alert alert-success alert-dismissible" *ngIf="msg">{{msg}}<button class="btn-close" (click)="msg=''"></button></div>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="table-card" *ngIf="!loading"><table class="table table-hover mb-0"><thead><tr><th>Applicant</th><th>Job</th><th>Company</th><th>Applied</th><th>Status</th><th>Action</th></tr></thead>
+  <tbody>
+    <tr *ngFor="let a of apps">
+      <td><strong>{{a.citizen?.fullName ?? '—'}}</strong></td><td>{{a.jobOpening?.jobTitle}}</td><td>{{a.jobOpening?.employer?.companyName}}</td>
+      <td>{{a.submittedDate | date:'MMM dd, yyyy'}}</td>
+      <td><span class="badge-status" [class]="statusBadge(a.status)">{{a.status}}</span></td>
+      <td *ngIf="a.status==='Pending' || a.status==='Shortlisted'" class="d-flex gap-2">
+        <button class="btn btn-sm btn-success" (click)="approve(a.id)">Approve</button>
+        <button class="btn btn-sm btn-outline-danger" (click)="reject(a.id)">Reject</button>
+      </td>
+      <td *ngIf="a.status!=='Pending' && a.status!=='Shortlisted'"><span class="text-muted">—</span></td>
+    </tr>
+    <tr *ngIf="!apps.length"><td colspan="6" class="text-center text-muted py-5">No applications found.</td></tr>
+  </tbody></table></div>

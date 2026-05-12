@@ -1,0 +1,7 @@
+<div class="page-header"><h1>Compliance Records</h1></div>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="table-card" *ngIf="!loading"><table class="table table-hover mb-0"><thead><tr><th>Entity</th><th>Type</th><th>Result</th><th>Date</th><th>Notes</th></tr></thead>
+<tbody>
+  <tr *ngFor="let c of records"><td><strong>#{{c.entityId}}</strong></td><td>{{c.type}}</td><td><span class="badge-status" [class]="resultBadge(c.result)">{{c.result}}</span></td><td>{{c.date | date:'MMM dd, yyyy'}}</td><td style="font-size:.82rem;color:#64748b;">{{c.notes ?? '—'}}</td></tr>
+  <tr *ngIf="!records.length"><td colspan="5" class="text-center text-muted py-5">No compliance records.</td></tr>
+</tbody></table></div>

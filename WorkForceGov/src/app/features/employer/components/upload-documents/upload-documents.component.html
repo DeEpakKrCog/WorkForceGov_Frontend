@@ -1,0 +1,32 @@
+<div class="page-header"><h1><i class="bi bi-cloud-upload me-2"></i>Upload Verification Documents</h1><p>Upload your Business License and PAN Card to get verified and start posting jobs.</p></div>
+<div class="alert alert-success alert-dismissible" *ngIf="msg">{{msg}}<button class="btn-close" (click)="msg=''"></button></div>
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="table-card p-4">
+      <h6 class="fw-bold mb-3"><i class="bi bi-upload me-2"></i>Upload Document</h6>
+      <div class="mb-3"><label class="form-label fw-semibold">Document Type</label><select class="form-select" [(ngModel)]="docType"><option *ngFor="let t of docTypes" [value]="t">{{t}}</option></select></div>
+      <div class="mb-3"><label class="form-label fw-semibold">Choose File</label><input type="file" class="form-control" (change)="onFile($event)" [disabled]="uploading" accept=".pdf,.jpg,.jpeg,.png" /><div class="form-text">PDF, JPG, PNG — max 10MB</div></div>
+      <div class="d-flex align-items-center gap-2 text-muted" *ngIf="uploading"><div class="spinner-border spinner-border-sm"></div>Uploading...</div>
+    </div>
+    <div class="table-card mt-3 p-4">
+      <h6 class="fw-bold mb-3 text-primary"><i class="bi bi-info-circle me-2"></i>Verification Steps</h6>
+      <ol style="font-size:.875rem;color:#475569;line-height:1.9;padding-left:20px;">
+        <li>Upload Business License or PAN Card</li>
+        <li>Labor Officer reviews (1–2 business days)</li>
+        <li>Status becomes <strong>Verified</strong></li>
+        <li>You can now post jobs and hire candidates</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+    <div class="table-card" *ngIf="!loading">
+      <div class="card-header-custom"><span>Submitted Documents</span><span class="badge bg-secondary">{{docs.length}}</span></div>
+      <table class="table table-hover mb-0"><thead><tr><th>Type</th><th>Uploaded</th><th>Status</th><th>View</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let d of docs"><td><strong>{{d.docType}}</strong></td><td>{{d.uploadedDate | date:'MMM dd, yyyy'}}</td><td><span class="badge-status" [class]="statusBadge(d.verificationStatus)">{{d.verificationStatus}}</span></td><td><a *ngIf="d.fileURL" [href]="d.fileURL" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></a></td></tr>
+        <tr *ngIf="!docs.length"><td colspan="4" class="text-center text-muted py-5">No documents uploaded yet.</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,104 @@
+<!-- Page Header -->
+<div class="page-header">
+  <h1>Benefits</h1>
+  <p>Track and apply for government program benefits</p>
+</div>
+
+<!-- Success Alert Messages -->
+<div class="alert alert-success alert-dismissible" *ngIf="msg">
+  {{ msg }}
+  <button class="btn-close" (click)="msg=''"></button>
+</div>
+
+<!-- Loading Spinner -->
+<div class="text-center py-5" *ngIf="loading">
+  <div class="spinner-border text-primary"></div>
+</div>
+
+<ng-container *ngIf="!loading">
+  
+  <!-- My Allocated Benefits Table -->
+  <div class="table-card mb-4">
+    <div class="card-header-custom">
+      <span><i class="bi bi-gift me-2"></i>My Allocated Benefits</span>
+    </div>
+    
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Program</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of benefits">
+          <td><strong>{{ b.program?.programName }}</strong></td>
+          <td>{{ b.benefitType }}</td>
+          <td class="fw-bold" style="color:#16a34a;">
+            ${{ b.amount | number:'1.2-2' }}
+          </td>
+          <td>{{ b.benefitDate | date:'MMM dd, yyyy' }}</td>
+          <td>
+            <span class="badge-status" [class]="statusBadge(b.status)">
+              {{ b.status }}
+            </span>
+          </td>
+        </tr>
+        
+        <!-- Empty State -->
+        <tr *ngIf="!benefits.length">
+          <td colspan="5" class="text-center text-muted py-4">
+            No benefits allocated yet.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Available Programs Grid -->
+  <div class="table-card" *ngIf="programs.length">
+    <div class="card-header-custom">
+      <span><i class="bi bi-kanban me-2"></i>Available Programs</span>
+    </div>
+    
+    <div class="row g-3 p-3">
+      <div class="col-md-6 col-lg-4" *ngFor="let p of programs">
+        <!-- Program Card -->
+        <div 
+          [style.border]="appliedIds.has(p.id) ? '1px solid #bbf7d0' : '1px solid #e2e8f0'" 
+          [style.background]="appliedIds.has(p.id) ? '#f0fdf4' : '#fafbfc'" 
+          style="border-radius:12px; padding:20px;"
+        >
+          <div class="fw-bold mb-1">{{ p.programName }}</div>
+          <div style="font-size:.78rem; color:#64748b; margin-bottom:8px;">
+            {{ p.description }}
+          </div>
+          <div style="font-size:.78rem; color:#059669; margin-bottom:12px;">
+            <i class="bi bi-currency-dollar me-1"></i>
+            Budget: ${{ p.totalBudget | number:'1.0-0' }}
+          </div>
+
+          <!-- Action Buttons -->
+          <button 
+            *ngIf="!appliedIds.has(p.id)" 
+            class="btn btn-sm btn-accent w-100" 
+            (click)="apply(p.id)"
+          >
+            <i class="bi bi-send me-1"></i>Apply Now
+          </button>
+          
+          <span 
+            *ngIf="appliedIds.has(p.id)" 
+            class="badge-status bs-success w-100 d-block text-center py-2"
+          >
+            <i class="bi bi-check-circle me-1"></i>Applied
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ng-container>

@@ -1,0 +1,29 @@
+<div class="page-header"><h1><i class="bi bi-graph-up me-2"></i>Performance Tracking</h1></div>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<ng-container *ngIf="!loading">
+  <div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#ede9fe;color:#7c3aed;"><i class="bi bi-kanban"></i></div><div class="stat-value">{{programs.length}}</div><div class="stat-label">Total Programs</div></div></div>
+    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="bi bi-play-circle"></i></div><div class="stat-value">{{activePrograms}}</div><div class="stat-label">Active Programs</div></div></div>
+    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="bi bi-mortarboard"></i></div><div class="stat-value">{{trainings.length}}</div><div class="stat-label">Total Trainings</div></div></div>
+    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:#d97706;"><i class="bi bi-people"></i></div><div class="stat-value">{{uniqueBeneficiaries}}</div><div class="stat-label">Beneficiaries</div></div></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-6"><div class="table-card p-4">
+      <h6 class="fw-bold mb-3"><i class="bi bi-kanban me-2"></i>Program Overview</h6>
+      <div *ngFor="let p of programs" class="mb-3">
+        <div class="d-flex justify-content-between mb-1"><span class="fw-semibold" style="font-size:.875rem;">{{p.programName}}</span><span style="color:#16a34a;font-weight:600;font-size:.82rem;">${{p.totalBudget | number:'1.0-0'}}</span></div>
+        <div class="wfg-progress"><div class="wfg-progress-bar" [style.width]="(p.status==='Active' ? 75 : 30) + '%'" [style.background]="p.status==='Active' ? 'linear-gradient(90deg,#7c3aed,#ec4899)' : '#94a3b8'"></div></div>
+        <div style="font-size:.72rem;color:#94a3b8;margin-top:2px;">{{p.status}}</div>
+      </div>
+      <div *ngIf="!programs.length" class="text-muted text-center py-3">No programs.</div>
+    </div></div>
+    <div class="col-lg-6"><div class="table-card p-4">
+      <h6 class="fw-bold mb-3"><i class="bi bi-mortarboard me-2"></i>Training Summary</h6>
+      <div *ngFor="let t of trainings" style="padding:10px 0;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;">
+        <div><div class="fw-semibold" style="font-size:.875rem;">{{t.title}}</div><div style="font-size:.75rem;color:#64748b;">{{t.program?.programName ?? '—'}}</div></div>
+        <span class="badge-status bs-success">Active</span>
+      </div>
+      <div *ngIf="!trainings.length" class="text-muted text-center py-3">No trainings.</div>
+    </div></div>
+  </div>
+</ng-container>

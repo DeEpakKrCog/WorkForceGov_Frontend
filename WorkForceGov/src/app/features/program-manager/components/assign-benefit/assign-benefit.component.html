@@ -1,0 +1,18 @@
+<div class="page-header"><h1><i class="bi bi-person-plus me-2"></i>Assign Benefit</h1><p>Directly assign a benefit to a registered citizen</p></div>
+<div class="alert alert-success alert-dismissible" *ngIf="msg()">{{msg()}}<button class="btn-close" (click)="msg.set('')"></button></div>
+<div class="alert alert-danger alert-dismissible" *ngIf="error()">{{error()}}<button class="btn-close" (click)="error.set('')"></button></div>
+<div class="row"><div class="col-lg-7"><div class="table-card p-4">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="row g-3">
+      <div class="col-md-6"><label class="form-label fw-semibold">Citizen ID *</label><input type="number" formControlName="citizenId" class="form-control" placeholder="Enter citizen ID" required /></div>
+      <div class="col-md-6"><label class="form-label fw-semibold">Program *</label><select formControlName="programId" class="form-select" required><option value="">-- Select --</option><option *ngFor="let p of programs" [value]="p.id">{{p.programName}}</option></select></div>
+      <div class="col-md-6"><label class="form-label fw-semibold">Benefit Type *</label><select formControlName="benefitType" class="form-select" required><option value="">-- Select --</option><option *ngFor="let t of benefitTypes" [value]="t">{{t}}</option></select></div>
+      <div class="col-md-6"><label class="form-label fw-semibold">Amount ($) *</label><input type="number" formControlName="amount" class="form-control" required /></div>
+      <div class="col-12"><label class="form-label fw-semibold">Notes / Description</label><textarea formControlName="description" class="form-control" rows="3" placeholder="Reason for assigning benefit..."></textarea></div>
+    </div>
+    <div class="d-flex gap-2 mt-4">
+      <button type="submit" class="btn btn-accent" [disabled]="loading()"><span class="spinner-border spinner-border-sm me-1" *ngIf="loading()"></span><i class="bi bi-gift me-1"></i>Assign Benefit</button>
+      <a routerLink="/program-manager/benefits" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+  </form>
+</div></div></div>

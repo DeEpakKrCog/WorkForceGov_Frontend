@@ -1,0 +1,18 @@
+<div class="page-header"><h1>Edit Job Posting</h1></div>
+<div class="alert alert-danger" *ngIf="error()">{{error()}}</div>
+<div class="row"><div class="col-lg-8"><div class="table-card p-4">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="row g-3">
+      <div class="col-md-6"><label class="form-label fw-semibold">Job Title</label><input formControlName="jobTitle" class="form-control" required /></div>
+      <div class="col-md-6"><label class="form-label fw-semibold">Location</label><input formControlName="location" class="form-control" required /></div>
+      <div class="col-12"><label class="form-label fw-semibold">Description</label><textarea formControlName="description" class="form-control" rows="5" required></textarea></div>
+      <div class="col-md-4"><label class="form-label fw-semibold">Category</label><select formControlName="jobCategory" class="form-select"><option value="">-- Select --</option><option *ngFor="let c of categories" [value]="c">{{c}}</option></select></div>
+      <div class="col-md-4"><label class="form-label fw-semibold">Min Salary ($)</label><input type="number" formControlName="salaryMin" class="form-control" /></div>
+      <div class="col-md-4"><label class="form-label fw-semibold">Max Salary ($)</label><input type="number" formControlName="salaryMax" class="form-control" /></div>
+    </div>
+    <div class="d-flex gap-2 mt-4">
+      <button type="submit" class="btn btn-accent" [disabled]="loading()">Save Changes</button>
+      <a routerLink="/employer/manage-jobs" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+  </form>
+</div></div></div>

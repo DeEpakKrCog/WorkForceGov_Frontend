@@ -1,0 +1,45 @@
+<!-- TOP NAV -->
+<nav class="wfg-topnav">
+  <button class="wfg-menu-btn" (click)="toggleSidebar()">
+    <i class="bi bi-list"></i>
+  </button>
+  <a routerLink="/home" class="wfg-brand">
+    <span class="wfg-brand-icon" [style.background]="'linear-gradient(135deg,' + auth.accentColor() + ',#6366f1)'">
+      <i class="bi bi-building-gear"></i>
+    </span>
+    WorkForce<strong>Gov</strong>
+  </a>
+  <div class="wfg-nav-end">
+    <span class="wfg-role-badge" [style.color]="auth.accentColor()" [style.background]="auth.accentColor() + '18'">
+      {{ auth.roleLabel() }}
+    </span>
+    <div class="wfg-avatar" [style.background]="auth.accentColor()">{{ auth.initials() }}</div>
+    <span class="wfg-username d-none d-md-inline">{{ auth.fullName() }}</span>
+    <button class="btn btn-sm btn-outline-secondary wfg-logout-btn" (click)="logout()">
+      <i class="bi bi-box-arrow-right me-1"></i>Logout
+    </button>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<aside class="wfg-sidebar" [class.collapsed]="!sidebarOpen()">
+  <div class="wfg-sidebar-section-label">Navigation</div>
+  <a *ngFor="let item of navItems()"
+     [routerLink]="item.route"
+     routerLinkActive="active"
+     class="wfg-nav-link">
+    <i class="bi {{ item.icon }}"></i>
+    <span>{{ item.label }}</span>
+  </a>
+  <hr class="wfg-sidebar-divider">
+  <div class="wfg-sidebar-section-label">Account</div>
+  <button class="wfg-nav-link wfg-nav-link-btn" (click)="logout()">
+    <i class="bi bi-box-arrow-right"></i>
+    <span>Logout</span>
+  </button>
+</aside>
+
+<!-- MAIN -->
+<main class="wfg-main" [class.full]="!sidebarOpen()">
+  <router-outlet></router-outlet>
+</main>

@@ -1,0 +1,9 @@
+<div class="page-header"><h1>Notifications</h1></div>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="table-card" *ngIf="!loading">
+  <div *ngFor="let n of notifications" style="padding:16px 24px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:16px;">
+    <div style="width:42px;height:42px;border-radius:10px;background:#dbeafe;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-bell" style="color:#2563eb;"></i></div>
+    <div style="flex:1;"><div style="font-size:.875rem;">{{n.message}}</div><div style="font-size:.75rem;color:#94a3b8;margin-top:2px;">{{n.createdDate | date:'MMM dd, yyyy h:mm a'}}</div></div>
+  </div>
+  <div *ngIf="!notifications.length" class="text-center text-muted py-5">No notifications.</div>
+</div>

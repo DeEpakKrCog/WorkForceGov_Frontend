@@ -1,0 +1,22 @@
+<div class="page-header d-flex justify-content-between align-items-center">
+  <div><h1>Manage Jobs</h1><p>View and manage your job postings</p></div>
+  <a routerLink="/employer/create-job" class="btn btn-accent"><i class="bi bi-plus-circle me-1"></i>Post New Job</a>
+</div>
+<div class="alert alert-info alert-dismissible" *ngIf="msg">{{msg}}<button class="btn-close" (click)="msg=''"></button></div>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="table-card" *ngIf="!loading"><table class="table table-hover mb-0">
+  <thead><tr><th>Title</th><th>Location</th><th>Posted</th><th>Applicants</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+    <tr *ngFor="let j of jobs">
+      <td><strong>{{j.jobTitle}}</strong><br/><span style="font-size:.75rem;color:#64748b;">{{j.jobCategory}}</span></td>
+      <td>{{j.location}}</td><td>{{j.postedDate | date:'MMM dd, yyyy'}}</td>
+      <td><span class="badge-status bs-info">{{j.applications?.length ?? 0}}</span></td>
+      <td><span class="badge-status" [class.bs-success]="j.status==='Open'" [class.bs-secondary]="j.status!=='Open'">{{j.status}}</span></td>
+      <td class="d-flex gap-2">
+        <a [routerLink]="['/employer/edit-job', j.id]" class="btn btn-sm btn-outline-primary" style="border-radius:8px;font-size:.75rem;">Edit</a>
+        <button *ngIf="j.status==='Open'" class="btn btn-sm btn-outline-danger" style="border-radius:8px;font-size:.75rem;" (click)="close(j.id)">Close</button>
+      </td>
+    </tr>
+    <tr *ngIf="!jobs.length"><td colspan="6" class="text-center text-muted py-5"><i class="bi bi-briefcase fs-1 d-block mb-2"></i>No jobs posted yet.</td></tr>
+  </tbody>
+</table></div>

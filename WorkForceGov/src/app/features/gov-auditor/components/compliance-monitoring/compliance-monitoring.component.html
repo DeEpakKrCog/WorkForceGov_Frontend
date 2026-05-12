@@ -1,0 +1,14 @@
+<div class="page-header"><h1><i class="bi bi-shield-check me-2"></i>Compliance Monitoring</h1></div>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<ng-container *ngIf="!loading">
+  <div class="row g-3 mb-4">
+    <div class="col-sm-4"><div class="stat-card"><div class="stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="bi bi-clipboard-check"></i></div><div class="stat-value">{{records.length}}</div><div class="stat-label">Total Records</div></div></div>
+    <div class="col-sm-4"><div class="stat-card"><div class="stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="bi bi-check-circle"></i></div><div class="stat-value">{{compliantCount}}</div><div class="stat-label">Compliant</div></div></div>
+    <div class="col-sm-4"><div class="stat-card"><div class="stat-icon" style="background:#fee2e2;color:#dc2626;"><i class="bi bi-x-circle"></i></div><div class="stat-value">{{nonCompliantCount}}</div><div class="stat-label">Non-Compliant</div></div></div>
+  </div>
+  <div class="table-card"><table class="table table-hover mb-0"><thead><tr><th>Entity</th><th>Type</th><th>Result</th><th>Date</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr *ngFor="let r of records"><td>#{{r.entityId}}</td><td>{{r.type}}</td><td><span class="badge-status" [class]="resultBadge(r.result)">{{r.result}}</span></td><td>{{r.date | date:'MMM dd, yyyy'}}</td><td style="font-size:.82rem;color:#64748b;">{{r.notes ?? '—'}}</td></tr>
+    <tr *ngIf="!records.length"><td colspan="5" class="text-center text-muted py-4">No records.</td></tr>
+  </tbody></table></div>
+</ng-container>

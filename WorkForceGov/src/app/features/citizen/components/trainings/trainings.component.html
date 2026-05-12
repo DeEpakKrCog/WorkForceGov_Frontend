@@ -1,0 +1,118 @@
+<div class="page-header">
+  <h1>Training Programs</h1>
+  <p>Enrol in available government training sessions</p>
+</div>
+
+<!-- Alerts -->
+<div class="alert alert-success alert-dismissible" *ngIf="msg">
+  {{ msg }}
+  <button class="btn-close" (click)="msg=''"></button>
+</div>
+
+<div class="alert alert-danger alert-dismissible" *ngIf="errMsg">
+  {{ errMsg }}
+  <button class="btn-close" (click)="errMsg=''"></button>
+</div>
+
+<!-- Loading Spinner -->
+<div class="text-center py-5" *ngIf="loading">
+  <div class="spinner-border text-primary"></div>
+</div>
+
+<ng-container *ngIf="!loading">
+  
+  <!-- My Enrollments Section -->
+  <div class="table-card mb-4" *ngIf="enrollments.length">
+    <div class="card-header-custom">
+      <span><i class="bi bi-bookmark-check me-2"></i>My Enrollments</span>
+    </div>
+    
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Training</th>
+            <th>Program</th>
+            <th>Dates</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let e of enrollments">
+            <td><strong>{{ e.training?.title || 'N/A' }}</strong></td>
+            <td>{{ e.training?.program?.programName }}</td>
+            <td style="font-size: .8rem;">
+              {{ e.training?.startDate | date:'MMM dd' }} – {{ e.training?.endDate | date:'MMM dd, yyyy' }}
+            </td>
+            <td>
+              <span class="badge-status" [class]="enrollBadge(e.status)">
+                {{ e.status }}
+              </span>
+            </td>
+            <td>
+              <button 
+                *ngIf="e.status === 'Enrolled'" 
+                class="btn btn-sm btn-outline-danger" 
+                (click)="unenroll(e.trainingId)"
+              >
+                <i class="bi bi-x-circle me-1"></i>Unenrol
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Available Trainings Section -->
+  <div class="table-card">
+    <div class="card-header-custom">
+      <span><i class="bi bi-journal-bookmark me-2"></i>Available Trainings</span>
+    </div>
+    
+    <div class="row g-3 p-3">
+      <div class="col-md-6 col-xl-4" *ngFor="let t of trainings">
+        <div 
+          [style.border]="enrolledIds.has(t.id) ? '1px solid #bbf7d0' : '1px solid #e2e8f0'" 
+          [style.background]="enrolledIds.has(t.id) ? '#f0fdf4' : '#fafbfc'" 
+          style="border-radius: 12px; padding: 20px; height: 100%; display: flex; flex-direction: column; gap: 8px;"
+        >
+          <div class="fw-bold" style="font-size: .95rem;">{{ t.title }}</div>
+          <div style="font-size: .78rem; color: #94a3b8;">{{ t.program?.programName }}</div>
+          
+          <p style="font-size: .82rem; color: #64748b; margin: 0; flex: 1;">
+            {{ t.description }}
+          </p>
+
+          <div style="font-size: .78rem; color: #64748b;">
+            <i class="bi bi-calendar-range me-1"></i>
+            {{ t.startDate | date:'MMM dd' }} – {{ t.endDate | date:'MMM dd, yyyy' }}
+          </div>
+
+          <div class="mt-2">
+            <span *ngIf="enrolledIds.has(t.id)" class="badge-status bs-success w-100 d-block text-center">
+              <i class="bi bi-check-circle me-1"></i>Enrolled
+            </span>
+            
+            <button 
+              *ngIf="!enrolledIds.has(t.id)" 
+              class="btn btn-sm btn-accent w-100" 
+              (click)="enroll(t.id)"
+            >
+              <i class="bi bi-plus-circle me-1"></i>Enrol Now
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="col-12" *ngIf="!trainings.length">
+        <div class="text-center text-muted py-4">
+          <i class="bi bi-calendar-x fs-2 d-block mb-2"></i>
+          No active trainings available.
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

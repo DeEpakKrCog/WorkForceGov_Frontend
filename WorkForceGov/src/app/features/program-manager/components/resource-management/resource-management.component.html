@@ -1,0 +1,11 @@
+<div class="page-header"><h1><i class="bi bi-box-seam me-2"></i>Resource Management</h1></div>
+<div class="row g-3 mb-4">
+  <div class="col-sm-4"><div class="stat-card"><div class="stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="bi bi-box-seam"></i></div><div class="stat-value">{{resources.length}}</div><div class="stat-label">Resource Types</div></div></div>
+  <div class="col-sm-4"><div class="stat-card"><div class="stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="bi bi-stack"></i></div><div class="stat-value">{{totalQty}}</div><div class="stat-label">Total Quantity</div></div></div>
+</div>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="table-card" *ngIf="!loading"><table class="table table-hover mb-0"><thead><tr><th>Resource</th><th>Type</th><th>Program</th><th>Quantity</th><th>Allocated</th></tr></thead>
+<tbody>
+  <tr *ngFor="let r of resources"><td><strong>{{r.resourceName}}</strong></td><td><span class="badge-status bs-info">{{r.resourceType}}</span></td><td>{{r.program?.programName ?? '—'}}</td><td class="fw-bold">{{r.quantity}}</td><td>{{r.allocatedDate | date:'MMM dd, yyyy'}}</td></tr>
+  <tr *ngIf="!resources.length"><td colspan="5" class="text-center text-muted py-5">No resources allocated.</td></tr>
+</tbody></table></div>

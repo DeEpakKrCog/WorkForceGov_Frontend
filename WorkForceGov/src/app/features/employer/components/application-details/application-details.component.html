@@ -1,0 +1,40 @@
+<div class="page-header d-flex justify-content-between align-items-center">
+  <div><h1>Application Details</h1><p>Review and act on this application</p></div>
+  <a routerLink="/employer/applications" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Back</a>
+</div>
+<div class="alert alert-success alert-dismissible" *ngIf="msg()">{{msg()}}<button class="btn-close" (click)="msg.set('')"></button></div>
+<div class="alert alert-danger alert-dismissible" *ngIf="err()">{{err()}}<button class="btn-close" (click)="err.set('')"></button></div>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="row g-4" *ngIf="app">
+  <div class="col-lg-6"><div class="table-card p-4">
+    <h6 class="fw-bold mb-3"><i class="bi bi-person-circle me-2"></i>Candidate Info</h6>
+    <p><span class="text-muted">Name:</span> <strong>{{app.citizen?.fullName}}</strong></p>
+    <p><span class="text-muted">Applied:</span> {{app.submittedDate | date:'MMMM dd, yyyy'}}</p>
+    <p><span class="text-muted">Status:</span> <span class="badge-status ms-1" [class]="statusBadge(app.status)">{{app.status}}</span></p>
+    <div *ngIf="app.coverLetter" style="background:#f8fafc;border-radius:10px;padding:14px;margin-top:12px;"><strong class="d-block mb-1">Cover Letter</strong><p style="font-size:.875rem;color:#475569;margin:0;">{{app.coverLetter}}</p></div>
+    <div *ngIf="app.notes" style="background:#fef9c3;border-radius:10px;padding:14px;margin-top:10px;"><strong class="d-block mb-1">Notes</strong><p style="font-size:.875rem;margin:0;">{{app.notes}}</p></div>
+  </div></div>
+  <div class="col-lg-6"><div class="table-card p-4">
+    <h6 class="fw-bold mb-3"><i class="bi bi-briefcase me-2"></i>Job Details</h6>
+    <p><span class="text-muted">Title:</span> <strong>{{app.jobOpening?.jobTitle}}</strong></p>
+    <p><span class="text-muted">Location:</span> {{app.jobOpening?.location}}</p>
+    <p><span class="text-muted">Category:</span> {{app.jobOpening?.jobCategory}}</p>
+    <p><span class="text-muted">Salary:</span> ${{app.jobOpening?.salaryMin | number:'1.0-0'}} – ${{app.jobOpening?.salaryMax | number:'1.0-0'}}</p>
+  </div></div>
+  <div class="col-12" *ngIf="app.status === 'Pending' || app.status === 'Reviewed'">
+    <div class="table-card p-4"><h6 class="fw-bold mb-3">Update Status</h6>
+      <div class="d-flex gap-3 flex-wrap">
+        <button class="btn btn-accent" (click)="update('Shortlisted','Candidate shortlisted after resume review.')"><i class="bi bi-star me-2"></i>Shortlist</button>
+        <button class="btn btn-outline-danger" (click)="update('Rejected','Not selected for this position.')"><i class="bi bi-x-circle me-2"></i>Reject</button>
+      </div>
+    </div>
+  </div>
+  <div class="col-12" *ngIf="app.status === 'Shortlisted'">
+    <div class="table-card p-4"><h6 class="fw-bold mb-3">Final Decision</h6>
+      <div class="d-flex gap-3 flex-wrap">
+        <button class="btn btn-success" (click)="update('Approved','Candidate selected for the role.')"><i class="bi bi-check-circle me-2"></i>Hire Candidate</button>
+        <button class="btn btn-outline-danger" (click)="update('Rejected','Not selected after shortlisting.')"><i class="bi bi-x-circle me-2"></i>Reject</button>
+      </div>
+    </div>
+  </div>
+</div>

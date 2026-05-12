@@ -1,0 +1,26 @@
+<div class="page-header"><h1><i class="bi bi-shield-check me-2"></i>Document Verifications</h1></div>
+<div class="alert alert-success alert-dismissible" *ngIf="msg">{{msg}}<button class="btn-close" (click)="msg=''"></button></div>
+<ul class="nav nav-tabs mb-4">
+  <li class="nav-item"><button class="nav-link" [class.active]="activeTab==='citizen'" (click)="activeTab='citizen'"><i class="bi bi-person me-1"></i>Citizens <span class="badge bg-warning text-dark ms-1">{{citizenDocs.length}}</span></button></li>
+  <li class="nav-item"><button class="nav-link" [class.active]="activeTab==='employer'" (click)="activeTab='employer'"><i class="bi bi-building me-1"></i>Employers <span class="badge bg-primary ms-1">{{employerDocs.length}}</span></button></li>
+</ul>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="table-card" *ngIf="!loading && activeTab==='citizen'"><table class="table table-hover mb-0"><thead><tr><th>Citizen</th><th>Type</th><th>File</th><th>Uploaded</th><th>Actions</th></tr></thead>
+  <tbody>
+    <tr *ngFor="let d of citizenDocs"><td><strong>{{d.citizen?.fullName ?? '—'}}</strong></td><td>{{d.documentType}}</td>
+      <td><a *ngIf="d.filePath" [href]="d.filePath" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye me-1"></i>{{d.fileName}}</a><span *ngIf="!d.filePath" class="text-muted">{{d.fileName}}</span></td>
+      <td>{{d.uploadedDate | date:'MMM dd, yyyy'}}</td>
+      <td class="d-flex gap-2"><button class="btn btn-sm btn-success" (click)="verifyCitizen(d.id)"><i class="bi bi-check-lg me-1"></i>Verify</button><button class="btn btn-sm btn-outline-danger" (click)="rejectCitizen(d.id)"><i class="bi bi-x-lg me-1"></i>Reject</button></td>
+    </tr>
+    <tr *ngIf="!citizenDocs.length"><td colspan="5" class="text-center text-muted py-5">No pending citizen documents.</td></tr>
+  </tbody></table>
+</div>
+<div class="table-card" *ngIf="!loading && activeTab==='employer'"><table class="table table-hover mb-0"><thead><tr><th>Company</th><th>Type</th><th>Uploaded</th><th>Actions</th></tr></thead>
+  <tbody>
+    <tr *ngFor="let d of employerDocs"><td><strong>{{d.employer?.companyName ?? '—'}}</strong></td><td>{{d.docType}}</td>
+      <td>{{d.uploadedDate | date:'MMM dd, yyyy'}}</td>
+      <td class="d-flex gap-2"><button class="btn btn-sm btn-success" (click)="verifyEmployer(d.id)"><i class="bi bi-check-lg me-1"></i>Approve</button><button class="btn btn-sm btn-outline-danger" (click)="rejectEmployer(d.id)"><i class="bi bi-x-lg me-1"></i>Reject</button></td>
+    </tr>
+    <tr *ngIf="!employerDocs.length"><td colspan="4" class="text-center text-muted py-5">No pending employer documents.</td></tr>
+  </tbody></table>
+</div>

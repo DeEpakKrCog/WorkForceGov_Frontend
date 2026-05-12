@@ -1,0 +1,14 @@
+<div class="page-header"><h1><i class="bi bi-people me-2"></i>Applications</h1><p>Review candidates who applied to your job openings</p></div>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="table-card" *ngIf="!loading"><table class="table table-hover mb-0">
+  <thead><tr><th>Applicant</th><th>Job</th><th>Applied</th><th>Status</th><th>Action</th></tr></thead>
+  <tbody>
+    <tr *ngFor="let a of apps">
+      <td><strong>{{a.citizen?.fullName ?? '—'}}</strong><br/><span style="font-size:.75rem;color:#64748b;">{{a.citizen?.email}}</span></td>
+      <td>{{a.jobOpening?.jobTitle ?? '—'}}</td><td>{{a.submittedDate | date:'MMM dd, yyyy'}}</td>
+      <td><span class="badge-status" [class]="statusBadge(a.status)">{{a.status}}</span></td>
+      <td><a [routerLink]="['/employer/application-details', a.id]" class="btn btn-sm btn-accent"><i class="bi bi-eye me-1"></i>Review</a></td>
+    </tr>
+    <tr *ngIf="!apps.length"><td colspan="5" class="text-center text-muted py-5"><i class="bi bi-inbox fs-1 d-block mb-2"></i>No applications received yet.</td></tr>
+  </tbody>
+</table></div>

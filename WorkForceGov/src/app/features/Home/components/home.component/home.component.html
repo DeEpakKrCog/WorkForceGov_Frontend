@@ -1,0 +1,99 @@
+<!-- NAV -->
+<nav class="navbar navbar-expand-lg" style="background:rgba(15,23,42,.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;z-index:1000;">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/home" style="font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;text-decoration:none;">
+      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:flex;align-items:center;justify-content:center;font-size:1rem;"><i class="bi bi-building-gear"></i></div>
+      WorkForce<span style="color:#38bdf8;">Gov</span>
+    </a>
+    <div class="d-flex align-items-center gap-3">
+      <ng-container *ngIf="!auth.isLoggedIn()">
+        <a routerLink="/login" class="btn btn-sm btn-outline-light" style="border-radius:8px;">Login</a>
+        <a routerLink="/register" class="btn btn-sm" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;border-radius:8px;border:none;">Register</a>
+      </ng-container>
+      <ng-container *ngIf="auth.isLoggedIn()">
+        <span style="color:#94a3b8;font-size:.85rem;">{{auth.fullName()}}</span>
+        <button class="btn btn-sm btn-accent" (click)="auth.redirectToDashboard()" style="border-radius:8px;">Go to Dashboard</button>
+      </ng-container>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section style="background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 60%,#0ea5e9 100%);padding:100px 0 80px;color:#fff;text-align:center;">
+  <div class="container">
+    <span style="display:inline-block;background:rgba(255,255,255,.12);border-radius:30px;padding:6px 20px;font-size:.78rem;font-weight:700;letter-spacing:.5px;margin-bottom:20px;text-transform:uppercase;">🏛️ Government Employment Platform</span>
+    <h1 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:700;line-height:1.12;margin-bottom:20px;">Connecting Citizens<br/>with Opportunities</h1>
+    <p style="font-size:1.1rem;color:rgba(255,255,255,.72);max-width:600px;margin:0 auto 40px;">WorkForceGov bridges job seekers, employers and government programs — ensuring transparency, compliance and workforce growth across 7 specialized modules.</p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      <a routerLink="/register" class="btn btn-lg" style="background:#fff;color:#0f172a;border-radius:12px;font-weight:700;padding:14px 36px;">Get Started <i class="bi bi-arrow-right ms-1"></i></a>
+      <a routerLink="/login" class="btn btn-lg btn-outline-light" style="border-radius:12px;padding:14px 36px;">Login</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section style="background:#fff;padding:0;margin-top:-1px;">
+  <div class="container"><div class="row g-0" style="border-bottom:1px solid #e2e8f0;">
+    <div class="col-6 col-md-3" *ngFor="let s of stats" style="padding:28px 24px;border-right:1px solid #e2e8f0;text-align:center;">
+      <div [style.color]="s.color" style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;">{{s.value}}</div>
+      <div style="font-size:.8rem;color:#64748b;font-weight:500;margin-top:2px;">{{s.label}}</div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ROLES -->
+<section style="padding:80px 0;background:#f8fafc;">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px;">
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:2rem;margin-bottom:8px;">Built for Every Role</h2>
+      <p style="color:#64748b;max-width:500px;margin:0 auto;">Seven specialized modules tailored for each stakeholder in the workforce ecosystem.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4 col-xl-3" *ngFor="let role of roles">
+        <div style="background:#fff;border-radius:16px;padding:28px;border:1px solid #e2e8f0;height:100%;transition:transform .15s,box-shadow .15s;cursor:default;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 30px rgba(0,0,0,.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <div [style.background]="role.color + '18'" [style.color]="role.color" style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;"><i class="bi {{role.icon}}" style="font-size:1.3rem;"></i></div>
+          <h5 style="font-weight:700;font-size:.95rem;margin-bottom:8px;">{{role.title}}</h5>
+          <p style="font-size:.82rem;color:#64748b;margin:0;line-height:1.6;">{{role.desc}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE JOBS -->
+<section *ngIf="jobs.length" style="padding:80px 0;background:#fff;border-top:1px solid #e2e8f0;">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px;">
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:2rem;margin-bottom:8px;">Latest Job Openings</h2>
+      <p style="color:#64748b;">Live positions from verified government-registered employers</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4" *ngFor="let job of jobs">
+        <div style="background:#fafbfc;border-radius:14px;padding:24px;border:1px solid #e2e8f0;height:100%;display:flex;flex-direction:column;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+            <div><h5 style="font-weight:700;font-size:.95rem;margin:0 0 4px;">{{job.jobTitle}}</h5><div style="font-size:.78rem;color:#64748b;">{{job.employer?.companyName ?? job.employerName ?? 'Company'}} &bull; {{job.location}}</div></div>
+            <span style="background:#dcfce7;color:#15803d;border-radius:20px;padding:3px 10px;font-size:.7rem;font-weight:700;flex-shrink:0;">Open</span>
+          </div>
+          <p style="font-size:.82rem;color:#475569;margin-bottom:12px;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{{job.description}}</p>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;">
+            <span style="font-weight:700;color:#0ea5e9;font-size:.875rem;">${{job.salaryMin | number:'1.0-0'}} – ${{job.salaryMax | number:'1.0-0'}}</span>
+            <a routerLink="/register" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;border:none;border-radius:8px;padding:6px 16px;font-size:.78rem;font-weight:600;text-decoration:none;">Apply Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px;"><a routerLink="/register" class="btn btn-lg btn-outline-primary" style="border-radius:12px;">View All Jobs <i class="bi bi-arrow-right ms-1"></i></a></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#0f172a;color:#64748b;padding:40px 0;text-align:center;border-top:1px solid rgba(255,255,255,.06);">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;">
+      <div style="width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;"><i class="bi bi-building-gear" style="font-size:.85rem;"></i></div>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:#e2e8f0;">WorkForceGov</span>
+    </div>
+    <p style="font-size:.82rem;margin:0;">© 2026 WorkForceGov — Government Employment &amp; Workforce Management Platform</p>
+    <div style="margin-top:12px;font-size:.75rem;"><a routerLink="/login" style="color:#94a3b8;text-decoration:none;margin:0 10px;">Login</a><a routerLink="/register" style="color:#94a3b8;text-decoration:none;margin:0 10px;">Register</a></div>
+  </div>
+</footer>

@@ -1,0 +1,99 @@
+<div class="min-vh-100 d-flex align-items-center justify-content-center"
+     style="background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 55%, #0ea5e9 100%); padding: 24px 16px;">
+
+  <div style="width: 100%; max-width: 440px;">
+    <!-- Brand -->
+    <div class="text-center mb-4">
+      <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#0ea5e9,#6366f1);
+                  display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1.3rem;color:#fff;">
+        <i class="bi bi-building-gear"></i>
+      </div>
+      <h2 style="font-weight:700;color:#fff;margin:0 0 4px;">WorkForceGov</h2>
+      <p style="color:#94a3b8;font-size:.875rem;margin:0;">Government Employment Platform</p>
+    </div>
+
+    <!-- Card -->
+    <div style="background:#fff;border-radius:16px;padding:36px;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+      <h3 style="font-weight:700;font-size:1.35rem;color:#0f172a;margin-bottom:4px;">Welcome back</h3>
+      <p style="color:#6b7280;font-size:.875rem;margin-bottom:24px;">Sign in to access your dashboard</p>
+
+      <!-- Error Alert -->
+      @if (error()) {
+        <div class="alert alert-danger py-2 mb-3 d-flex align-items-center gap-2" style="border-radius:10px;font-size:.875rem;">
+          <i class="bi bi-exclamation-circle-fill text-danger"></i>
+          <span>{{ error() }}</span>
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Email -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold" style="font-size:.82rem;color:#374151;">Email Address</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0" style="border-radius:9px 0 0 9px;">
+              <i class="bi bi-envelope text-muted"></i>
+            </span>
+            <input type="email" formControlName="email"
+              class="form-control border-start-0" style="border-radius:0 9px 9px 0;"
+              [class.is-invalid]="submitted && f['email'].errors"
+              placeholder="you@example.com" />
+          </div>
+          
+          <!-- Validation Fix: Capture errors as 'e' to avoid redundant checks -->
+          @if (submitted && f['email'].errors; as e) {
+            <div style="font-size:.78rem;color:#ef4444;margin-top:4px;">
+              @if (e['required']) { Email is required. }
+              @else if (e['email']) { Enter a valid email address. }
+            </div>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="mb-4">
+          <label class="form-label fw-semibold" style="font-size:.82rem;color:#374151;">Password</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0" style="border-radius:9px 0 0 9px;">
+              <i class="bi bi-lock text-muted"></i>
+            </span>
+            <input type="password" formControlName="password"
+              class="form-control border-start-0" style="border-radius:0 9px 9px 0;"
+              [class.is-invalid]="submitted && f['password'].errors"
+              placeholder="Enter your password" />
+          </div>
+
+          <!-- Validation Fix: Removed ?. because f['password'].errors is guarded by @if -->
+          @if (submitted && f['password'].errors; as e) {
+            <div style="font-size:.78rem;color:#ef4444;margin-top:4px;">
+              @if (e['required']) { Password is required. }
+              @else if (e['minlength']) { Minimum 6 characters. }
+            </div>
+          }
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-100 fw-bold"
+          style="padding:11px;border-radius:10px;background:linear-gradient(135deg,#0ea5e9,#0284c7);border:none;"
+          [disabled]="loading()">
+          @if (loading()) {
+            <span class="spinner-border spinner-border-sm me-2"></span>Signing in…
+          } @else {
+            <i class="bi bi-box-arrow-in-right me-1"></i>Sign In
+          }
+        </button>
+      </form>
+
+      <!-- Register link -->
+      <p class="text-center mt-4 mb-0" style="font-size:.875rem;color:#6b7280;">
+        Don't have an account?
+        <a routerLink="/register" class="fw-bold text-decoration-none" style="color:#0ea5e9;">Register here</a>
+      </p>
+    </div>
+
+    <!-- Dev debug info -->
+    @if (debugInfo()) {
+      <div class="mt-3 p-2 text-center" style="font-size:.72rem;color:#94a3b8;font-family:monospace;">
+        {{ debugInfo() }}
+      </div>
+    }
+  </div>
+</div>

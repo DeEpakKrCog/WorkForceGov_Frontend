@@ -1,0 +1,25 @@
+<div class="page-header d-flex justify-content-between align-items-center">
+  <div><h1>Program Management</h1><p>Create and manage employment programs</p></div>
+  <a routerLink="/program-manager/create-program" class="btn btn-accent"><i class="bi bi-plus-circle me-1"></i>New Program</a>
+</div>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="row g-4" *ngIf="!loading">
+  <div class="col-md-6 col-xl-4" *ngFor="let p of programs">
+    <div class="stat-card h-100 d-flex flex-column">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <div style="background:#ede9fe;color:#7c3aed;border-radius:10px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;"><i class="bi bi-kanban"></i></div>
+        <span class="badge-status" [class.bs-success]="p.status==='Active'" [class.bs-secondary]="p.status!=='Active'">{{p.status}}</span>
+      </div>
+      <h5 class="fw-bold mb-1" style="font-size:1rem;">{{p.programName}}</h5>
+      <p style="font-size:.82rem;color:#64748b;flex:1;">{{p.description}}</p>
+      <div class="row g-2 mt-2" style="border-top:1px solid #f1f5f9;padding-top:12px;font-size:.78rem;">
+        <div class="col-6"><span class="text-muted">Type:</span> <strong>{{p.programType}}</strong></div>
+        <div class="col-6"><span class="text-muted">Budget:</span> <strong style="color:#16a34a;">${{p.totalBudget | number:'1.0-0'}}</strong></div>
+        <div class="col-6"><span class="text-muted">Start:</span> {{p.startDate | date:'MMM dd, yyyy'}}</div>
+        <div class="col-6"><span class="text-muted">End:</span> {{p.endDate ? (p.endDate | date:'MMM dd, yyyy') : 'Ongoing'}}</div>
+      </div>
+      <a [routerLink]="['/program-manager/edit-program', p.id]" class="btn btn-sm btn-outline-primary mt-3"><i class="bi bi-pencil me-1"></i>Edit Program</a>
+    </div>
+  </div>
+  <div class="col-12" *ngIf="!programs.length"><div class="stat-card text-center py-5"><i class="bi bi-kanban fs-1 text-muted d-block mb-2"></i><p class="text-muted">No programs yet. <a routerLink="/program-manager/create-program">Create your first program.</a></p></div></div>
+</div>

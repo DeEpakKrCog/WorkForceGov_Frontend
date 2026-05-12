@@ -1,0 +1,57 @@
+<div class="page-header d-flex justify-content-between align-items-center">
+  <div>
+    <h1>Notifications</h1>
+    <p>Stay up to date with your account activity</p>
+  </div>
+  <span *ngIf="unreadCount()" class="badge bg-danger rounded-pill px-3 py-2">
+    {{ unreadCount() }} unread
+  </span>
+</div>
+
+<!-- Loading State -->
+<div class="text-center py-5" *ngIf="loading">
+  <div class="spinner-border text-primary"></div>
+</div>
+
+<!-- Notifications List -->
+<div class="table-card" *ngIf="!loading">
+  <div 
+    *ngFor="let n of notifications" 
+    style="padding: 16px 24px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 16px;"
+  >
+    <!-- Icon Container -->
+    <div 
+      [style.background]="n.isRead ? '#f1f5f9' : '#dbeafe'" 
+      style="width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;"
+    >
+      <i 
+        class="bi bi-bell" 
+        [style.color]="n.isRead ? '#94a3b8' : '#2563eb'"
+      ></i>
+    </div>
+
+    <!-- Content Area -->
+    <div style="flex: 1;">
+      <div 
+        style="font-size: .875rem;" 
+        [class.fw-semibold]="!n.isRead"
+      >
+        {{ n.message }}
+      </div>
+      <div style="font-size: .75rem; color: #94a3b8; margin-top: 2px;">
+        {{ n.createdDate | date:'MMM dd, yyyy h:mm a' }} &bull; {{ n.category }}
+      </div>
+    </div>
+
+    <!-- New Badge -->
+    <span *ngIf="!n.isRead" class="badge-status bs-info" style="font-size: .68rem;">
+      New
+    </span>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!notifications.length" class="text-center text-muted py-5">
+    <i class="bi bi-bell-slash fs-1 d-block mb-2"></i>
+    No notifications yet.
+  </div>
+</div>

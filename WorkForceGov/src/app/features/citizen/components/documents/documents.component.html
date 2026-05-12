@@ -1,0 +1,109 @@
+<div class="page-header">
+  <h1>My Documents</h1>
+  <p>Upload and manage your verification documents</p>
+</div>
+
+<!-- Success/Error Message Alert -->
+<div class="alert alert-success alert-dismissible" *ngIf="msg">
+  {{ msg }}
+  <button class="btn-close" (click)="msg=''"></button>
+</div>
+
+<div class="row g-4">
+  <!-- Left Column: Upload Form & Info -->
+  <div class="col-lg-4">
+    <div class="table-card p-4">
+      <h6 class="fw-bold mb-3">
+        <i class="bi bi-cloud-upload me-2"></i>Upload Document
+      </h6>
+
+      <!-- Document Type Select -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Document Type</label>
+        <select class="form-select" [(ngModel)]="docType">
+          <option *ngFor="let t of docTypes" [value]="t">{{ t }}</option>
+        </select>
+      </div>
+
+      <!-- File Input -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Choose File</label>
+        <input 
+          type="file" 
+          class="form-control" 
+          (change)="onFile($event)" 
+          [disabled]="uploading" 
+          accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" 
+        />
+        <div class="form-text">PDF, JPG, PNG, DOC — max 10MB</div>
+      </div>
+
+      <!-- Uploading State -->
+      <div class="d-flex align-items-center gap-2 text-muted" *ngIf="uploading">
+        <div class="spinner-border spinner-border-sm"></div>
+        <span>Uploading...</span>
+      </div>
+    </div>
+
+    <!-- Verification Info Card -->
+    <div class="table-card mt-3 p-4">
+      <h6 class="fw-bold mb-3">
+        <i class="bi bi-info-circle text-primary me-2"></i>Verification Process
+      </h6>
+      <ol style="font-size: .875rem; color: #475569; line-height: 1.8; padding-left: 20px;">
+        <li>Upload a valid government document</li>
+        <li>Labor Officer reviews within 2 business days</li>
+        <li>Status updates to <strong>Verified</strong> upon approval</li>
+        <li>Verified documents unlock full platform access</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Right Column: Documents List -->
+  <div class="col-lg-8">
+    <div class="text-center py-5" *ngIf="loading">
+      <div class="spinner-border text-primary"></div>
+    </div>
+
+    <div class="table-card" *ngIf="!loading">
+      <div class="card-header-custom">
+        <span>Uploaded Documents</span>
+        <span class="badge bg-secondary">{{ docs.length }} files</span>
+      </div>
+
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>File Name</th>
+            <th>Type</th>
+            <th>Uploaded</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of docs">
+            <td>
+              <i class="bi bi-file-earmark me-2 text-muted"></i>
+              {{ d.fileName }}
+            </td>
+            <td>{{ d.documentType }}</td>
+            <td>{{ d.uploadedDate | date:'MMM dd, yyyy' }}</td>
+            <td>
+              <span class="badge-status" [class]="statusBadge(d.verificationStatus)">
+                {{ d.verificationStatus }}
+              </span>
+            </td>
+          </tr>
+
+          <!-- Empty State -->
+          <tr *ngIf="!docs.length">
+            <td colspan="4" class="text-center text-muted py-5">
+              <i class="bi bi-folder2-open fs-2 d-block mb-2"></i>
+              No documents uploaded yet.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<div class="page-header"><h1><i class="bi bi-bell me-2"></i>System Alerts</h1></div>
+<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="table-card" *ngIf="!loading">
+  <div *ngFor="let a of alerts" style="padding:16px 24px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:16px;">
+    <div style="width:42px;height:42px;border-radius:10px;background:#fee2e2;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-exclamation-triangle" style="color:#dc2626;"></i></div>
+    <div style="flex:1;"><div class="fw-semibold" style="font-size:.875rem;">{{a.message}}</div><div style="font-size:.75rem;color:#94a3b8;margin-top:2px;">{{a.createdDate | date:'MMM dd, yyyy h:mm a'}} &bull; {{a.category}}</div></div>
+  </div>
+  <div *ngIf="!alerts.length" class="text-center text-muted py-5"><i class="bi bi-bell-slash fs-1 d-block mb-2"></i>No alerts at this time.</div>
+</div>
