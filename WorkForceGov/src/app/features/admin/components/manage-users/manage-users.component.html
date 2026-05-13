@@ -1,22 +1,70 @@
 <div class="page-header d-flex justify-content-between align-items-center">
-  <div><h1>Manage Users</h1><p>Create, edit, and manage all system users</p></div>
-  <a routerLink="/admin/create-user" class="btn btn-accent"><i class="bi bi-person-plus me-1"></i>Add User</a>
+  <div>
+    <h1>Manage Users</h1>
+    <p>Create, edit, and manage all system users</p>
+  </div>
+  <a routerLink="/admin/create-user" class="btn btn-accent">
+    <i class="bi bi-person-plus me-1"></i>Add User
+  </a>
 </div>
-<div class="alert alert-success alert-dismissible" *ngIf="msg">{{msg}}<button class="btn-close" (click)="msg=''"></button></div>
-<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
-<div class="table-card" *ngIf="!loading"><table class="table table-hover mb-0">
-  <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
-  <tbody>
-    <tr *ngFor="let u of users">
-      <td><strong>{{u.fullName}}</strong></td><td>{{u.email}}</td>
-      <td><span class="badge-status bs-info">{{u.role}}</span></td>
-      <td><span class="badge-status" [class.bs-success]="u.status==='Active'" [class.bs-danger]="u.status!=='Active'">{{u.status}}</span></td>
-      <td>{{u.createdAt | date:'MMM dd, yyyy'}}</td>
-      <td class="d-flex gap-2">
-        <a [routerLink]="['/admin/edit-user', u.id]" class="btn btn-sm btn-outline-primary" style="border-radius:8px;font-size:.75rem;">Edit</a>
-        <button class="btn btn-sm btn-outline-danger" style="border-radius:8px;font-size:.75rem;" (click)="deactivate(u.id)">Deactivate</button>
-      </td>
-    </tr>
-    <tr *ngIf="!users.length"><td colspan="6" class="text-center text-muted py-5">No users found.</td></tr>
-  </tbody>
-</table></div>
+
+<!-- Success Message Alert -->
+<div class="alert alert-success alert-dismissible" *ngIf="msg">
+  {{ msg }}
+  <button class="btn-close" (click)="msg = ''"></button>
+</div>
+
+<!-- Loading Spinner -->
+<div class="text-center py-5" *ngIf="loading">
+  <div class="spinner-border text-primary"></div>
+</div>
+
+<!-- Users Table -->
+<div class="table-card" *ngIf="!loading">
+  <table class="table table-hover mb-0">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Joined</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of users">
+        <td><strong>{{ u.fullName }}</strong></td>
+        <td>{{ u.email }}</td>
+        <td>
+          <span class="badge-status bs-info">{{ u.role }}</span>
+        </td>
+        <td>
+          <span class="badge-status" 
+                [class.bs-success]="u.status === 'Active'" 
+                [class.bs-danger]="u.status !== 'Active'">
+            {{ u.status }}
+          </span>
+        </td>
+        <td>{{ u.createdAt | date:'MMM dd, yyyy' }}</td>
+        <td class="d-flex gap-2">
+          <a [routerLink]="['/admin/edit-user', u.id]" 
+             class="btn btn-sm btn-outline-primary action-btn">
+             Edit
+          </a>
+          <button class="btn btn-sm btn-outline-danger action-btn" 
+                  (click)="deactivate(u.id)">
+            Deactivate
+          </button>
+        </td>
+      </tr>
+
+      <!-- Empty State -->
+      <tr *ngIf="!users.length">
+        <td colspan="6" class="text-center text-muted py-5">
+          No users found.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

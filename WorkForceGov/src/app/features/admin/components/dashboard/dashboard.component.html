@@ -1,29 +1,153 @@
-<div class="page-header"><h1>System Dashboard</h1><p>Platform overview and administration</p></div>
-<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="page-header">
+  <h1>System Dashboard</h1>
+  <p>Platform overview and administration</p>
+</div>
+
+<!-- Loading Spinner -->
+<div class="text-center py-5" *ngIf="loading">
+  <div class="spinner-border text-primary"></div>
+</div>
+
 <ng-container *ngIf="data">
+  <!-- Stat Cards Row -->
   <div class="row g-3 mb-4">
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#fee2e2;color:#dc2626;"><i class="bi bi-people-fill"></i></div><div class="stat-value">{{data.totalUsers}}</div><div class="stat-label">Total Users</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="bi bi-briefcase"></i></div><div class="stat-value">{{data.openJobs}}</div><div class="stat-label">Open Jobs</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="bi bi-kanban"></i></div><div class="stat-value">{{data.activePrograms}}</div><div class="stat-label">Active Programs</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:#d97706;"><i class="bi bi-file-earmark-text"></i></div><div class="stat-value">{{data.pendingApplications}}</div><div class="stat-label">Pending Apps</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#ede9fe;color:#7c3aed;"><i class="bi bi-person-badge"></i></div><div class="stat-value">{{data.totalCitizens}}</div><div class="stat-label">Citizens</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#fce7f3;color:#db2777;"><i class="bi bi-building"></i></div><div class="stat-value">{{data.totalEmployers}}</div><div class="stat-label">Employers</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#d1fae5;color:#059669;"><i class="bi bi-currency-dollar"></i></div><div class="stat-value">${{data.totalBudget | number:'1.0-0'}}</div><div class="stat-label">Total Budget</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#e0e7ff;color:#4f46e5;"><i class="bi bi-clipboard-data"></i></div><div class="stat-value">{{data.totalAudits}}</div><div class="stat-label">Audits</div></div></div>
-  </div>
-  <div class="row g-4">
-    <div class="col-lg-8"><div class="table-card">
-      <div class="card-header-custom"><span><i class="bi bi-briefcase me-2"></i>Recent Jobs</span><a routerLink="/admin/manage-users" class="btn btn-sm btn-accent">Manage Users</a></div>
-      <table class="table table-hover mb-0"><thead><tr><th>Title</th><th>Company</th><th>Posted</th><th>Status</th></tr></thead>
-      <tbody><tr *ngFor="let j of data.recentJobs"><td><strong>{{j.jobTitle}}</strong></td><td>{{j.employer?.companyName}}</td><td>{{j.postedDate | date:'MMM dd'}}</td><td><span class="badge-status bs-success">{{j.status}}</span></td></tr>
-      <tr *ngIf="!data.recentJobs.length"><td colspan="4" class="text-center text-muted py-4">No recent jobs.</td></tr></tbody></table>
-    </div></div>
-    <div class="col-lg-4"><div class="table-card">
-      <div class="card-header-custom"><span><i class="bi bi-activity me-2"></i>System Logs</span></div>
-      <div style="padding:8px 16px;max-height:300px;overflow-y:auto;">
-        <div *ngFor="let l of data.recentLogs" style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:.8rem;"><strong>{{l.user?.fullName}}</strong> — {{l.action}}<br/><span style="color:#94a3b8;font-size:.72rem;">{{l.timestamp | date:'MMM dd, HH:mm'}}</span></div>
-        <div *ngIf="!data.recentLogs.length" class="text-muted text-center py-3">No logs.</div>
+    <!-- Total Users -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fee2e2; color:#dc2626;">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <div class="stat-value">{{ data.totalUsers }}</div>
+        <div class="stat-label">Total Users</div>
       </div>
-    </div></div>
+    </div>
+
+    <!-- Open Jobs -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#dbeafe; color:#2563eb;">
+          <i class="bi bi-briefcase"></i>
+        </div>
+        <div class="stat-value">{{ data.openJobs }}</div>
+        <div class="stat-label">Open Jobs</div>
+      </div>
+    </div>
+
+    <!-- Active Programs -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#dcfce7; color:#16a34a;">
+          <i class="bi bi-kanban"></i>
+        </div>
+        <div class="stat-value">{{ data.activePrograms }}</div>
+        <div class="stat-label">Active Programs</div>
+      </div>
+    </div>
+
+    <!-- Pending Applications -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fef3c7; color:#d97706;">
+          <i class="bi bi-file-earmark-text"></i>
+        </div>
+        <div class="stat-value">{{ data.pendingApplications }}</div>
+        <div class="stat-label">Pending Apps</div>
+      </div>
+    </div>
+
+    <!-- Citizens -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#ede9fe; color:#7c3aed;">
+          <i class="bi bi-person-badge"></i>
+        </div>
+        <div class="stat-value">{{ data.totalCitizens }}</div>
+        <div class="stat-label">Citizens</div>
+      </div>
+    </div>
+
+    <!-- Employers -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fce7f3; color:#db2777;">
+          <i class="bi bi-building"></i>
+        </div>
+        <div class="stat-value">{{ data.totalEmployers }}</div>
+        <div class="stat-label">Employers</div>
+      </div>
+    </div>
+
+    <!-- Total Budget -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#d1fae5; color:#059669;">
+          <i class="bi bi-currency-dollar"></i>
+        </div>
+        <div class="stat-value">${{ data.totalBudget | number:'1.0-0' }}</div>
+        <div class="stat-label">Total Budget</div>
+      </div>
+    </div>
+
+    <!-- Audits -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#e0e7ff; color:#4f46e5;">
+          <i class="bi bi-clipboard-data"></i>
+        </div>
+        <div class="stat-value">{{ data.totalAudits }}</div>
+        <div class="stat-label">Audits</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Data Row -->
+  <div class="row g-4">
+    <!-- Recent Jobs Table -->
+    <div class="col-lg-8">
+      <div class="table-card">
+        <div class="card-header-custom">
+          <span><i class="bi bi-briefcase me-2"></i>Recent Jobs</span>
+          <a routerLink="/admin/manage-users" class="btn btn-sm btn-accent">Manage Users</a>
+        </div>
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Company</th>
+              <th>Posted</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let j of data.recentJobs">
+              <td><strong>{{ j.jobTitle }}</strong></td>
+              <td>{{ j.employer?.companyName }}</td>
+              <td>{{ j.postedDate | date:'MMM dd' }}</td>
+              <td><span class="badge-status bs-success">{{ j.status }}</span></td>
+            </tr>
+            <tr *ngIf="!data.recentJobs.length">
+              <td colspan="4" class="text-center text-muted py-4">No recent jobs.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- System Logs List -->
+    <div class="col-lg-4">
+      <div class="table-card">
+        <div class="card-header-custom">
+          <span><i class="bi bi-activity me-2"></i>System Logs</span>
+        </div>
+        <div class="log-container" style="padding: 8px 16px; max-height: 300px; overflow-y: auto;">
+          <div *ngFor="let l of data.recentLogs" class="log-item" style="padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: .8rem;">
+            <strong>{{ l.user?.fullName }}</strong> — {{ l.action }}
+            <br />
+            <span style="color: #94a3b8; font-size: .72rem;">{{ l.timestamp | date:'MMM dd, HH:mm' }}</span>
+          </div>
+          <div *ngIf="!data.recentLogs.length" class="text-muted text-center py-3">No logs.</div>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-container>
