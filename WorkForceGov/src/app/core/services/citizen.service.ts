@@ -13,7 +13,6 @@ export class CitizenService {
   private http = inject(HttpClient);
   private base = environment.apis.citizen; 
 
-  // --- Dashboard & Profile ---
   getDashboard(): Observable<CitizenDashboard> {
     return this.http.get<CitizenDashboard>(`${this.base}/citizen/dashboard`);
   }
@@ -26,7 +25,6 @@ export class CitizenService {
     return this.http.put(`${this.base}/citizen/profile`, data);
   }
 
-  // --- Jobs & Applications ---
   searchJobs(keyword = '', location = '', category = ''): Observable<any> {
     let params = new HttpParams();
     if (keyword) params = params.set('keyword', keyword);
@@ -49,8 +47,7 @@ export class CitizenService {
     return this.http.delete(`${this.base}/citizen/applications/${id}`);
   }
 
-  // --- Benefits & Programs ---
-  // Fixes 404: Retrieves available programs
+  // FIXED: Pointing to /programs instead of /benefits
   getPrograms(): Observable<EmploymentProgram[]> {
     return this.http.get<EmploymentProgram[]>(`${this.base}/citizen/programs`);
   }
@@ -59,12 +56,10 @@ export class CitizenService {
     return this.http.get<Benefit[]>(`${this.base}/citizen/benefits`);
   }
 
-  // FIXED TS2339: Missing method for program enrollment
   applyBenefit(programId: number): Observable<any> {
     return this.http.post(`${this.base}/citizen/benefits/apply/${programId}`, {});
   }
 
-  // --- Documents ---
   getDocuments(): Observable<CitizenDocument[]> {
     return this.http.get<CitizenDocument[]>(`${this.base}/citizen/documents`);
   }
@@ -73,8 +68,6 @@ export class CitizenService {
     return this.http.post<CitizenDocument>(`${this.base}/citizen/documents/upload`, formData);
   }
 
-  // --- Trainings & Enrollments ---
-  // Fixes 404: Combined endpoint for available trainings and enrollments
   getTrainingsData(): Observable<any> {
     return this.http.get<any>(`${this.base}/citizen/trainings`);
   }

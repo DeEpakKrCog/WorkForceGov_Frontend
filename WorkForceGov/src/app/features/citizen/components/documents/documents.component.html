@@ -1,3 +1,4 @@
+<!-- Page Header -->
 <div class="page-header">
   <h1>My Documents</h1>
   <p>Upload and manage your verification documents</p>
@@ -28,15 +29,24 @@
       <!-- File Input -->
       <div class="mb-3">
         <label class="form-label fw-semibold">Choose File</label>
+        <!-- FIXED: Now triggers onFileSelect instead of uploading immediately -->
         <input 
           type="file" 
           class="form-control" 
-          (change)="onFile($event)" 
+          (change)="onFileSelect($event)" 
           [disabled]="uploading" 
           accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" 
         />
         <div class="form-text">PDF, JPG, PNG, DOC — max 10MB</div>
       </div>
+
+      <!-- FIXED: Dedicated Upload Button Added Here -->
+      <button 
+        class="btn btn-primary w-100 mb-3" 
+        (click)="onUpload()" 
+        [disabled]="!selectedFile || uploading">
+        <i class="bi bi-cloud-upload me-2"></i> Upload Document
+      </button>
 
       <!-- Uploading State -->
       <div class="d-flex align-items-center gap-2 text-muted" *ngIf="uploading">

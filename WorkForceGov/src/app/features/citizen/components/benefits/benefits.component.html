@@ -35,7 +35,8 @@
       </thead>
       <tbody>
         <tr *ngFor="let b of benefits">
-          <td><strong>{{ b.program?.programName }}</strong></td>
+          <!-- FIXED: Updated property to match the backend JSON exactly -->
+          <td><strong>{{ b.employmentProgram?.programName }}</strong></td>
           <td>{{ b.benefitType }}</td>
           <td class="fw-bold" style="color:#16a34a;">
             ${{ b.amount | number:'1.2-2' }}

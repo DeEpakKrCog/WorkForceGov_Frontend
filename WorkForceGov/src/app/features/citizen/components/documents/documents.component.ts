@@ -17,6 +17,7 @@ export class CitizenDocumentsComponent implements OnInit {
   docs: CitizenDocument[] = [];
   docTypes = ['Identity', 'Qualification', 'Resume', 'Certificate', 'Other'];
   docType = 'Identity';
+  selectedFile: File | null = null; // FIXED: Added selectedFile state
   
   // UI States
   uploading = false;
@@ -40,14 +41,18 @@ export class CitizenDocumentsComponent implements OnInit {
     });
   }
 
-  onFile(event: Event): void {
+  // FIXED: Only stores the file, doesn't upload immediately
+  onFileSelect(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
+    this.selectedFile = input.files?.[0] || null;
+  }
 
-    if (!file) return;
+  // FIXED: Dedicated method for the upload button
+  onUpload(): void {
+    if (!this.selectedFile) return;
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', this.selectedFile);
     formData.append('documentType', this.docType);
 
     this.uploading = true;
@@ -55,8 +60,8 @@ export class CitizenDocumentsComponent implements OnInit {
       next: () => {
         this.uploading = false;
         this.msg = 'Document uploaded successfully!';
+        this.selectedFile = null; // Reset file selection
         this.load();
-        input.value = ''; // Reset file input
       },
       error: () => {
         this.uploading = false;
