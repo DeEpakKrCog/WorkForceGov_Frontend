@@ -28,7 +28,7 @@ const STORAGE_KEY = 'wfg_user';
 export class AuthService {
   // Admin API (7001) is the single auth gateway for ALL roles (shared DB)
   private loginUrl    = `${environment.apis.admin}/auth/login`;
-  private registerUrl = `${environment.apis.admin}/admin/users`;
+  private registerUrl = `${environment.apis.admin}/auth/register`;
 
   private _user = signal<AuthResponse | null>(this._loadUser());
 

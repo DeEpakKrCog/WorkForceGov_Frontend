@@ -55,6 +55,7 @@ export interface Citizen {
   gender?: string;
   phoneNumber?: string;
   address?: string;
+  resumeUrl?: string; // <--- ADDED
 }
 
 
@@ -102,10 +103,11 @@ export interface Application {
   status: string;
   coverLetter?: string;
   notes?: string;
+  // ENSURE THIS LINE IS PRESENT AND SAVED
+  resumeUrl?: string; 
   citizen?: Citizen;
   jobOpening?: JobOpening;
 }
-
 
 // ─── Benefit ──────────────────────────────────────────────────────────────────
 

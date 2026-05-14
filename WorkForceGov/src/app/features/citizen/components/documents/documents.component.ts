@@ -13,16 +13,15 @@ import { CitizenDocument } from '../../../../core/models/index';
 export class CitizenDocumentsComponent implements OnInit {
   private svc = inject(CitizenService);
 
-  // State Properties
   docs: CitizenDocument[] = [];
   docTypes = ['Identity', 'Qualification', 'Resume', 'Certificate', 'Other'];
   docType = 'Identity';
-  selectedFile: File | null = null; // FIXED: Added selectedFile state
+  selectedFile: File | null = null;
   
-  // UI States
   uploading = false;
   loading = true;
   msg = '';
+  err = '';
 
   ngOnInit(): void {
     this.load();
@@ -37,47 +36,52 @@ export class CitizenDocumentsComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
+        this.err = 'Failed to load documents.';
       }
     });
   }
 
-  // FIXED: Only stores the file, doesn't upload immediately
   onFileSelect(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.selectedFile = input.files?.[0] || null;
+    this.err = ''; 
+    this.msg = '';
   }
 
-  // FIXED: Dedicated method for the upload button
   onUpload(): void {
-    if (!this.selectedFile) return;
+    if (!this.selectedFile) {
+      this.err = 'Please select a file first.';
+      return;
+    }
 
+    // Keys here must match the [FromForm] DocumentUploadRequest properties in C#
     const formData = new FormData();
-    formData.append('file', this.selectedFile);
-    formData.append('documentType', this.docType);
+    formData.append('File', this.selectedFile); 
+    formData.append('DocumentType', this.docType);
 
     this.uploading = true;
+    this.msg = '';
+    this.err = '';
+
     this.svc.uploadDocument(formData).subscribe({
       next: () => {
         this.uploading = false;
         this.msg = 'Document uploaded successfully!';
-        this.selectedFile = null; // Reset file selection
-        this.load();
+        this.selectedFile = null;
+        this.load(); 
       },
-      error: () => {
+      error: (error) => {
         this.uploading = false;
-        this.msg = 'Upload failed. Please try again.';
+        this.err = error.error?.message || 'Upload failed. Ensure the file is not too large.';
       }
     });
   }
 
   statusBadge(status: string): string {
     switch (status) {
-      case 'Verified':
-        return 'bs-success';
-      case 'Rejected':
-        return 'bs-danger';
-      default:
-        return 'bs-warning';
+      case 'Verified': return 'bg-success';
+      case 'Rejected': return 'bg-danger';
+      default: return 'bg-warning text-dark';
     }
   }
 }

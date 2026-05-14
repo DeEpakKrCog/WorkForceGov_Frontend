@@ -1,39 +1,124 @@
 <div class="page-header d-flex justify-content-between align-items-center">
-  <div><h1>Application Details</h1><p>Review and act on this application</p></div>
-  <a routerLink="/employer/applications" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Back</a>
+  <div>
+    <h1>Application Details</h1>
+    <p class="text-muted">Review and act on this application</p>
+  </div>
+  <a routerLink="/employer/applications" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-1"></i>Back
+  </a>
 </div>
-<div class="alert alert-success alert-dismissible" *ngIf="msg()">{{msg()}}<button class="btn-close" (click)="msg.set('')"></button></div>
-<div class="alert alert-danger alert-dismissible" *ngIf="err()">{{err()}}<button class="btn-close" (click)="err.set('')"></button></div>
-<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+
+<!-- Notifications -->
+<div class="alert alert-success alert-dismissible fade show" *ngIf="msg()">
+  {{ msg() }}
+  <button class="btn-close" (click)="msg.set('')"></button>
+</div>
+
+<div class="alert alert-danger alert-dismissible fade show" *ngIf="err()">
+  {{ err() }}
+  <button class="btn-close" (click)="err.set('')"></button>
+</div>
+
+<!-- Loading State -->
+<div class="text-center py-5" *ngIf="loading">
+  <div class="spinner-border text-primary"></div>
+</div>
+
+<!-- Main Content -->
 <div class="row g-4" *ngIf="app">
-  <div class="col-lg-6"><div class="table-card p-4">
-    <h6 class="fw-bold mb-3"><i class="bi bi-person-circle me-2"></i>Candidate Info</h6>
-    <p><span class="text-muted">Name:</span> <strong>{{app.citizen?.fullName}}</strong></p>
-    <p><span class="text-muted">Applied:</span> {{app.submittedDate | date:'MMMM dd, yyyy'}}</p>
-    <p><span class="text-muted">Status:</span> <span class="badge-status ms-1" [class]="statusBadge(app.status)">{{app.status}}</span></p>
-    <div *ngIf="app.coverLetter" style="background:#f8fafc;border-radius:10px;padding:14px;margin-top:12px;"><strong class="d-block mb-1">Cover Letter</strong><p style="font-size:.875rem;color:#475569;margin:0;">{{app.coverLetter}}</p></div>
-    <div *ngIf="app.notes" style="background:#fef9c3;border-radius:10px;padding:14px;margin-top:10px;"><strong class="d-block mb-1">Notes</strong><p style="font-size:.875rem;margin:0;">{{app.notes}}</p></div>
-  </div></div>
-  <div class="col-lg-6"><div class="table-card p-4">
-    <h6 class="fw-bold mb-3"><i class="bi bi-briefcase me-2"></i>Job Details</h6>
-    <p><span class="text-muted">Title:</span> <strong>{{app.jobOpening?.jobTitle}}</strong></p>
-    <p><span class="text-muted">Location:</span> {{app.jobOpening?.location}}</p>
-    <p><span class="text-muted">Category:</span> {{app.jobOpening?.jobCategory}}</p>
-    <p><span class="text-muted">Salary:</span> ${{app.jobOpening?.salaryMin | number:'1.0-0'}} – ${{app.jobOpening?.salaryMax | number:'1.0-0'}}</p>
-  </div></div>
-  <div class="col-12" *ngIf="app.status === 'Pending' || app.status === 'Reviewed'">
-    <div class="table-card p-4"><h6 class="fw-bold mb-3">Update Status</h6>
-      <div class="d-flex gap-3 flex-wrap">
-        <button class="btn btn-accent" (click)="update('Shortlisted','Candidate shortlisted after resume review.')"><i class="bi bi-star me-2"></i>Shortlist</button>
-        <button class="btn btn-outline-danger" (click)="update('Rejected','Not selected for this position.')"><i class="bi bi-x-circle me-2"></i>Reject</button>
+  
+  <!-- Candidate Information Card -->
+  <div class="col-lg-6">
+    <div class="table-card p-4 h-100">
+      <h6 class="fw-bold mb-3">
+        <i class="bi bi-person-circle me-2"></i>Candidate Info
+      </h6>
+      <p><span class="text-muted">Name:</span> <strong>{{ app.citizen?.fullName }}</strong></p>
+      <p><span class="text-muted">Applied:</span> {{ app.submittedDate | date:'MMMM dd, yyyy' }}</p>
+      <p>
+        <span class="text-muted">Status:</span> 
+        <span class="badge-status ms-1" [class]="statusBadge(app.status)">{{ app.status }}</span>
+      </p>
+
+      <!-- NEW: Resume Viewing Requirement -->
+      <div class="mt-4 pt-3 border-top">
+        <label class="small fw-bold text-uppercase text-muted d-block mb-2">Required Document</label>
+        <div class="d-flex align-items-center justify-content-between p-3 rounded border bg-light">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-file-earmark-pdf-fill text-danger fs-4 me-3"></i>
+            <div>
+              <span class="d-block fw-bold">Citizen_Resume.pdf</span>
+              <small class="text-muted">Click to review candidate qualifications</small>
+            </div>
+          </div>
+          <!-- markResumeAsViewed() must be defined in your .ts file -->
+          <a [href]="app.resumeUrl" target="_blank" class="btn btn-sm btn-primary" (click)="markResumeAsViewed()">
+            <i class="bi bi-eye me-1"></i> View Resume
+          </a>
+        </div>
+        <p class="text-danger small mt-2" *ngIf="!resumeViewed()">
+          <i class="bi bi-info-circle me-1"></i> You must view the resume before you can update the status.
+        </p>
+      </div>
+
+      <div *ngIf="app.coverLetter" class="mt-3 p-3 rounded" style="background:#f8fafc;">
+        <strong class="d-block mb-1">Cover Letter</strong>
+        <p class="small text-secondary m-0">{{ app.coverLetter }}</p>
       </div>
     </div>
   </div>
-  <div class="col-12" *ngIf="app.status === 'Shortlisted'">
-    <div class="table-card p-4"><h6 class="fw-bold mb-3">Final Decision</h6>
+
+  <!-- Job Details Card -->
+  <div class="col-lg-6">
+    <div class="table-card p-4 h-100">
+      <h6 class="fw-bold mb-3">
+        <i class="bi bi-briefcase me-2"></i>Job Details
+      </h6>
+      <p><span class="text-muted">Title:</span> <strong>{{ app.jobOpening?.jobTitle }}</strong></p>
+      <p><span class="text-muted">Location:</span> {{ app.jobOpening?.location }}</p>
+      <p><span class="text-muted">Category:</span> {{ app.jobOpening?.jobCategory }}</p>
+      <p>
+        <span class="text-muted">Salary:</span> 
+        ${{ app.jobOpening?.salaryMin | number:'1.0-0' }} – ${{ app.jobOpening?.salaryMax | number:'1.0-0' }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Action Section: Initial Review -->
+  <div class="col-12" *ngIf="app.status === 'Pending' || app.status === 'Reviewed'">
+    <div class="table-card p-4">
+      <h6 class="fw-bold mb-3">Update Status</h6>
       <div class="d-flex gap-3 flex-wrap">
-        <button class="btn btn-success" (click)="update('Approved','Candidate selected for the role.')"><i class="bi bi-check-circle me-2"></i>Hire Candidate</button>
-        <button class="btn btn-outline-danger" (click)="update('Rejected','Not selected after shortlisting.')"><i class="bi bi-x-circle me-2"></i>Reject</button>
+        <!-- Buttons are disabled if resumeViewed() is false -->
+        <button class="btn btn-accent" 
+                [disabled]="!resumeViewed()"
+                (click)="update('Shortlisted', 'Candidate shortlisted after resume review.')">
+          <i class="bi bi-star me-2"></i>Shortlist
+        </button>
+        <button class="btn btn-outline-danger" 
+                [disabled]="!resumeViewed()"
+                (click)="update('Rejected', 'Not selected for this position.')">
+          <i class="bi bi-x-circle me-2"></i>Reject
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Section: Final Decision -->
+  <div class="col-12" *ngIf="app.status === 'Shortlisted'">
+    <div class="table-card p-4 border-top border-3 border-info">
+      <h6 class="fw-bold mb-3">Final Decision</h6>
+      <div class="d-flex gap-3 flex-wrap">
+        <button class="btn btn-success" 
+                [disabled]="!resumeViewed()"
+                (click)="update('Approved', 'Candidate selected for the role.')">
+          <i class="bi bi-check-circle me-2"></i>Hire Candidate
+        </button>
+        <button class="btn btn-outline-danger" 
+                [disabled]="!resumeViewed()"
+                (click)="update('Rejected', 'Not selected after shortlisting.')">
+          <i class="bi bi-x-circle me-2"></i>Reject
+        </button>
       </div>
     </div>
   </div>
