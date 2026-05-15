@@ -1,37 +1,123 @@
-<div class="page-header"><h1>Program Manager Dashboard</h1><p>Workforce programs and training oversight</p></div>
-<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="page-header">
+  <h1><i class="bi bi-kanban me-2"></i>Program Manager Dashboard</h1>
+  <p>Workforce programs and training oversight</p>
+</div>
+
+<div class="alert alert-danger mt-4" *ngIf="errorMessage">
+  <h5 class="fw-bold"><i class="bi bi-exclamation-triangle me-2"></i>Dashboard Error</h5>
+  <p class="mb-0">{{ errorMessage }}</p>
+</div>
+
+<div class="text-center py-5" *ngIf="loading">
+  <div class="spinner-border text-primary"></div>
+</div>
+
 <ng-container *ngIf="data">
   <div class="row g-3 mb-4">
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#ede9fe;color:#7c3aed;"><i class="bi bi-kanban"></i></div><div class="stat-value">{{data.activePrograms}}</div><div class="stat-label">Active Programs</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="bi bi-currency-dollar"></i></div><div class="stat-value">${{data.totalBudget | number:'1.0-0'}}</div><div class="stat-label">Total Budget</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:#d97706;"><i class="bi bi-mortarboard"></i></div><div class="stat-value">{{data.totalTrainings}}</div><div class="stat-label">Active Trainings</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="bi bi-people"></i></div><div class="stat-value">{{data.totalBeneficiaries}}</div><div class="stat-label">Beneficiaries</div></div></div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #ede9fe; color: #7c3aed;">
+          <i class="bi bi-kanban"></i>
+        </div>
+        <div class="stat-value">{{ data.activePrograms }}</div>
+        <div class="stat-label">Active Programs</div>
+      </div>
+    </div>
+    
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #dcfce7; color: #16a34a;">
+          <i class="bi bi-currency-dollar"></i>
+        </div>
+        <div class="stat-value">${{ data.totalBudget | number:'1.0-0' }}</div>
+        <div class="stat-label">Total Budget</div>
+      </div>
+    </div>
+    
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #fef3c7; color: #d97706;">
+          <i class="bi bi-mortarboard"></i>
+        </div>
+        <div class="stat-value">{{ data.totalTrainings }}</div>
+        <div class="stat-label">Active Trainings</div>
+      </div>
+    </div>
+    
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #dbeafe; color: #2563eb;">
+          <i class="bi bi-people"></i>
+        </div>
+        <div class="stat-value">{{ data.totalBeneficiaries }}</div>
+        <div class="stat-label">Beneficiaries</div>
+      </div>
+    </div>
   </div>
+
   <div class="table-card mb-4 p-4">
-    <div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0"><i class="bi bi-wallet2 me-2"></i>Budget Utilization</h6><span class="fw-bold" style="color:#7c3aed;">{{budgetPct}}% used</span></div>
-    <div class="wfg-progress"><div class="wfg-progress-bar" [style.width]="budgetPct + '%'"></div></div>
-    <div class="d-flex justify-content-between mt-1" style="font-size:.75rem;color:#94a3b8;"><span>Utilized: ${{data.budgetUtilized | number:'1.0-0'}}</span><span>Remaining: ${{(data.totalBudget - data.budgetUtilized) | number:'1.0-0'}}</span></div>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h6 class="fw-bold mb-0">
+        <i class="bi bi-wallet2 me-2"></i>Budget Utilization
+      </h6>
+      <span class="fw-bold" style="color: #7c3aed;">
+        {{ budgetPct }}% used
+      </span>
+    </div>
+    <div class="wfg-progress">
+      <div class="wfg-progress-bar" [style.width]="budgetPct + '%'"></div>
+    </div>
+    <div class="d-flex justify-content-between mt-1" style="font-size: .75rem; color: #94a3b8;">
+      <span>Utilized: ${{ data.budgetUtilized | number:'1.0-0' }}</span>
+      <span>Remaining: ${{ (data.totalBudget - data.budgetUtilized) | number:'1.0-0' }}</span>
+    </div>
   </div>
+
   <div class="row g-4">
-    <div class="col-lg-6"><div class="table-card">
-      <div class="card-header-custom"><span><i class="bi bi-kanban me-2"></i>Programs</span><a routerLink="/program-manager/program-management" class="btn btn-sm btn-accent">View All</a></div>
-      <div style="padding:8px 16px;">
-        <div *ngFor="let p of data.programs" style="padding:12px 0;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;">
-          <div><div class="fw-semibold" style="font-size:.875rem;">{{p.programName}}</div><div style="font-size:.75rem;color:#64748b;">{{p.programType}}</div></div>
-          <span class="badge-status" [class.bs-success]="p.status==='Active'" [class.bs-secondary]="p.status!=='Active'">{{p.status}}</span>
+    
+    <div class="col-lg-6">
+      <div class="table-card">
+        <div class="card-header-custom">
+          <span><i class="bi bi-kanban me-2"></i>Programs</span>
+          <a routerLink="/program-manager/program-management" class="btn btn-sm btn-accent">View All</a>
         </div>
-        <div *ngIf="!data.programs.length" class="text-muted text-center py-3">No programs.</div>
-      </div>
-    </div></div>
-    <div class="col-lg-6"><div class="table-card">
-      <div class="card-header-custom"><span><i class="bi bi-mortarboard me-2"></i>Active Trainings</span><a routerLink="/program-manager/training-management" class="btn btn-sm btn-accent">View All</a></div>
-      <div style="padding:8px 16px;">
-        <div *ngFor="let t of data.activeTrainings" style="padding:12px 0;border-bottom:1px solid #f1f5f9;">
-          <div class="fw-semibold" style="font-size:.875rem;">{{t.title}}</div>
-          <div style="font-size:.75rem;color:#64748b;margin-top:2px;"><i class="bi bi-calendar me-1"></i>{{t.startDate | date:'MMM dd'}} – {{t.endDate | date:'MMM dd, yyyy'}}</div>
+        <div style="padding: 8px 16px;">
+          <div *ngFor="let p of data.programs" style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div class="fw-semibold" style="font-size: .875rem;">{{ p.programName }}</div>
+              <div style="font-size: .75rem; color: #64748b;">{{ p.programType }}</div>
+            </div>
+            <span class="badge-status" [class.bs-success]="p.status === 'Active'" [class.bs-secondary]="p.status !== 'Active'">
+              {{ p.status }}
+            </span>
+          </div>
+          <div *ngIf="!data.programs.length" class="text-muted text-center py-3">
+            No programs.
+          </div>
         </div>
-        <div *ngIf="!data.activeTrainings.length" class="text-muted text-center py-3">No active trainings.</div>
       </div>
-    </div></div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="table-card">
+        <div class="card-header-custom">
+          <span><i class="bi bi-mortarboard me-2"></i>Active Trainings</span>
+          <a routerLink="/program-manager/training-management" class="btn btn-sm btn-accent">View All</a>
+        </div>
+        <div style="padding: 8px 16px;">
+          <div *ngFor="let t of data.activeTrainings" style="padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+            <div class="fw-semibold" style="font-size: .875rem;">{{ t.title }}</div>
+            <div style="font-size: .75rem; color: #64748b; margin-top: 2px;">
+              <i class="bi bi-calendar me-1"></i>
+              {{ t.startDate | date:'MMM dd' }} – {{ t.endDate | date:'MMM dd, yyyy' }}
+            </div>
+          </div>
+          <div *ngIf="!data.activeTrainings.length" class="text-muted text-center py-3">
+            No active trainings.
+          </div>
+        </div>
+      </div>
+    </div>
+    
   </div>
 </ng-container>

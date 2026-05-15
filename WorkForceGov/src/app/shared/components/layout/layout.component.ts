@@ -69,11 +69,8 @@ export class LayoutComponent {
         { label: 'Programs',         icon: 'bi-kanban',            route: '/program-manager/program-management' },
         { label: 'Trainings',        icon: 'bi-mortarboard',       route: '/program-manager/training-management' },
         { label: 'Benefits',         icon: 'bi-gift',              route: '/program-manager/benefits' },
-        { label: 'Assign Benefit',   icon: 'bi-person-plus',       route: '/program-manager/assign-benefit' },
-        { label: 'Resources',        icon: 'bi-box-seam',          route: '/program-manager/resource-management' },
         { label: 'Budget Monitor',   icon: 'bi-wallet2',           route: '/program-manager/budget-monitoring' },
-        { label: 'Performance',      icon: 'bi-graph-up',          route: '/program-manager/performance-tracking' },
-        { label: 'Reports',          icon: 'bi-bar-chart',         route: '/program-manager/reports' },
+        
       ],
     };
     return map[role] ?? [];

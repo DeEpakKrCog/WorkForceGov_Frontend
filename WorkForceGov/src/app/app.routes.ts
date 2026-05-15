@@ -89,11 +89,8 @@ export const routes: Routes = [
     { path: 'create-training',    loadComponent: () => import('./features/program-manager/components/create-training/create-training.component').then(m => m.CreateTrainingComponent) },
     { path: 'edit-training/:id',  loadComponent: () => import('./features/program-manager/components/edit-training/edit-training.component').then(m => m.EditTrainingComponent) },
     { path: 'benefits',           loadComponent: () => import('./features/program-manager/components/benefits/benefits.component').then(m => m.PMBenefitsComponent) },
-    { path: 'assign-benefit',     loadComponent: () => import('./features/program-manager/components/assign-benefit/assign-benefit.component').then(m => m.AssignBenefitComponent) },
-    { path: 'resource-management',loadComponent: () => import('./features/program-manager/components/resource-management/resource-management.component').then(m => m.ResourceManagementComponent) },
     { path: 'budget-monitoring',  loadComponent: () => import('./features/program-manager/components/budget-monitoring/budget-monitoring.component').then(m => m.BudgetMonitoringComponent) },
-    { path: 'performance-tracking',loadComponent: () => import('./features/program-manager/components/performance-tracking/performance-tracking.component').then(m => m.PerformanceTrackingComponent) },
-    { path: 'reports',            loadComponent: () => import('./features/program-manager/components/reports/reports.component').then(m => m.PMReportsComponent) },
+    
   ]},
 
   { path: '**', redirectTo: 'home' },

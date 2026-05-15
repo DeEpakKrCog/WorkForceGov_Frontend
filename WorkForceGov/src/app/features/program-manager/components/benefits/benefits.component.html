@@ -1,74 +1,127 @@
-<!-- Page Header -->
-<div class="page-header d-flex justify-content-between align-items-center">
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
   <div>
-    <h1><i class="bi bi-gift me-2"></i>Benefits Management</h1>
+    <h1 class="h3 mb-1"><i class="bi bi-gift me-2 text-primary"></i>Benefits Management</h1>
+    <p class="text-muted mb-0">Review citizen benefit requests and assign benefits directly</p>
   </div>
-  <a routerLink="/program-manager/assign-benefit" class="btn btn-accent">
-    <i class="bi bi-person-plus me-1"></i>Assign Benefit
-  </a>
 </div>
 
-<!-- Alerts & Loading -->
-<div class="alert alert-success alert-dismissible" *ngIf="msg">
-  {{ msg }}
-  <button class="btn-close" (click)="msg=''"></button>
+<div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" *ngIf="msg">
+  <i class="bi bi-check-circle-fill me-2"></i>{{ msg }}
+  <button type="button" class="btn-close" (click)="msg=''" aria-label="Close"></button>
 </div>
 
-<div class="text-center py-5" *ngIf="loading">
-  <div class="spinner-border text-primary"></div>
+<div class="text-center py-5 my-5" *ngIf="loading">
+  <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+    <span class="visually-hidden">Loading benefits...</span>
+  </div>
+  <p class="text-muted mt-3 fw-medium">Loading benefit records...</p>
 </div>
 
-<!-- Data Table -->
-<div class="table-card" *ngIf="!loading">
-  <table class="table table-hover mb-0">
-    <thead>
-      <tr>
-        <th>Citizen</th>
-        <th>Program</th>
-        <th>Type</th>
-        <th>Amount</th>
-        <th>Date</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let b of benefits">
-        <td><strong>{{ b.citizen?.fullName ?? '—' }}</strong></td>
-        <!-- FIXED: changed b.program to b.employmentProgram -->
-        <td>{{ b.employmentProgram?.programName ?? '—' }}</td>
-        <td>{{ b.benefitType }}</td>
-        <td class="fw-bold" style="color:#16a34a;">${{ b.amount | number:'1.2-2' }}</td>
-        <td>{{ b.benefitDate | date:'MMM dd, yyyy' }}</td>
-        <td>
-          <span class="badge-status" [class]="statusBadge(b.status)">
-            {{ b.status }}
-          </span>
-        </td>
-        
-        <!-- Actions (Pending only) -->
-        <td *ngIf="b.status === 'Pending'" class="d-flex gap-2">
-          <button class="btn btn-sm btn-success" (click)="approve(b.id)" title="Approve">
-            <i class="bi bi-check-lg"></i>
-          </button>
-          <button class="btn btn-sm btn-outline-danger" (click)="reject(b.id)" title="Reject">
-            <i class="bi bi-x-lg"></i>
-          </button>
-        </td>
-        
-        <!-- Actions (Completed) -->
-        <td *ngIf="b.status !== 'Pending'">
-          <span class="text-muted">—</span>
-        </td>
-      </tr>
+<div class="table-card shadow-sm rounded-4 bg-white overflow-hidden" *ngIf="!loading">
+  
+  <div class="card-header bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
+    <h5 class="mb-0 fw-bold d-flex align-items-center">
+      <i class="bi bi-list-ul me-2 text-muted"></i> All Benefit Records
+    </h5>
+    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-semibold" *ngIf="pendingCount > 0">
+      {{ pendingCount }} Pending
+    </span>
+  </div>
 
-      <!-- Empty State -->
-      <tr *ngIf="!benefits.length">
-        <td colspan="7" class="text-center text-muted py-5">
-          <i class="bi bi-gift fs-1 d-block mb-2"></i>
-          No benefit records found.
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-hover table-borderless align-middle mb-0">
+      <thead class="table-light text-muted" style="font-size: 0.85rem; letter-spacing: 0.5px;">
+        <tr>
+          <th class="ps-4 py-3 text-uppercase">Citizen</th>
+          <th class="py-3 text-uppercase">Program</th>
+          <th class="py-3 text-uppercase">Type</th>
+          <th class="py-3 text-uppercase">Amount</th>
+          <th class="py-3 text-uppercase">Date</th>
+          <th class="py-3 text-uppercase">Status</th>
+          <th class="pe-4 py-3 text-uppercase">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of benefits" class="border-bottom">
+          
+          <td class="ps-4 py-3">
+            <div class="d-flex align-items-center">
+              <div class="avatar bg-light text-primary rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold" style="width: 40px; height: 40px;">
+                {{ getInitials($any(b.citizen)?.user?.fullName || b.citizen?.fullName) }}
+              </div>
+              <div>
+                <strong class="d-block text-dark">{{ $any(b.citizen)?.user?.fullName || b.citizen?.fullName || '—' }}</strong>
+                <span class="text-muted small" *ngIf="b.citizen?.email">{{ b.citizen?.email }}</span>
+              </div>
+            </div>
+          </td>
+          
+          <td class="py-3 text-secondary fw-medium">
+            {{ $any(b).program?.programName || $any(b).employmentProgram?.programName || '—' }}
+          </td>
+          
+          <td class="py-3 text-secondary">
+            <span class="badge bg-light text-dark border px-2 py-1">{{ b.benefitType }}</span>
+          </td>
+          
+          <td class="py-3">
+            <span class="fw-bold fs-6" [class.text-success]="b.status === 'Active' || b.status === 'Paid'" [class.text-secondary]="b.status === 'Pending' || b.status === 'Rejected'">
+              ${{ b.amount | number:'1.2-2' }}
+            </span>
+          </td>
+          
+          <td class="py-3 text-secondary">
+            {{ b.benefitDate | date:'MMM dd, yyyy' }}
+          </td>
+          
+          <td class="py-3">
+            <span class="badge rounded-pill px-3 py-2 fw-semibold" [class]="statusBadge(b.status)">
+              <i class="bi me-1" [ngClass]="{
+                'bi-clock-history': b.status === 'Pending',
+                'bi-check-circle-fill': b.status === 'Active' || b.status === 'Paid',
+                'bi-x-circle-fill': b.status === 'Rejected'
+              }"></i>
+              {{ b.status }}
+            </span>
+          </td>
+          
+          <td class="pe-4 py-3">
+            
+            <div *ngIf="b.status === 'Pending'" class="d-flex align-items-center gap-2">
+              
+              <div class="input-group input-group-sm" style="width: 140px;">
+                 <span class="input-group-text bg-light text-muted border-end-0">$</span>
+                 <input type="number" class="form-control border-start-0 ps-0 text-success fw-bold" placeholder="Amount" [(ngModel)]="pendingAmounts[b.id]">
+              </div>
+
+              <button class="btn btn-sm btn-success px-3 fw-medium d-flex align-items-center shadow-sm" (click)="approve(b.id)" [disabled]="!pendingAmounts[b.id] || pendingAmounts[b.id] <= 0">
+                <i class="bi bi-check-lg me-1"></i> Approve
+              </button>
+              
+              <button class="btn btn-sm btn-outline-danger px-3 fw-medium d-flex align-items-center bg-white" (click)="reject(b.id)">
+                <i class="bi bi-x-lg me-1"></i> Reject
+              </button>
+            </div>
+            
+            <div *ngIf="b.status !== 'Pending'" class="text-muted ps-3">
+              —
+            </div>
+
+          </td>
+        </tr>
+
+        <tr *ngIf="!benefits.length">
+          <td colspan="7" class="text-center py-5">
+            <div class="empty-state">
+              <i class="bi bi-gift text-light bg-secondary bg-opacity-10 rounded-circle p-4 fs-1 d-inline-flex align-items-center justify-content-center mb-3 text-muted"></i>
+              <h5 class="text-dark fw-bold">No benefit records found</h5>
+              <p class="text-muted mx-auto" style="max-width: 400px;">
+                When citizens apply for benefits or when you assign them directly, they will appear here.
+              </p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
