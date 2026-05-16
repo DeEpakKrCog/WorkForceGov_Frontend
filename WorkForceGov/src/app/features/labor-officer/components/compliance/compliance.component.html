@@ -1,7 +1,123 @@
-<div class="page-header"><h1>Compliance Records</h1></div>
-<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
-<div class="table-card" *ngIf="!loading"><table class="table table-hover mb-0"><thead><tr><th>Entity</th><th>Type</th><th>Result</th><th>Date</th><th>Notes</th></tr></thead>
-<tbody>
-  <tr *ngFor="let c of records"><td><strong>#{{c.entityId}}</strong></td><td>{{c.type}}</td><td><span class="badge-status" [class]="resultBadge(c.result)">{{c.result}}</span></td><td>{{c.date | date:'MMM dd, yyyy'}}</td><td style="font-size:.82rem;color:#64748b;">{{c.notes ?? '—'}}</td></tr>
-  <tr *ngIf="!records.length"><td colspan="5" class="text-center text-muted py-5">No compliance records.</td></tr>
-</tbody></table></div>
+<div class="page-header mb-4 d-flex justify-content-between align-items-center">
+  <div>
+    <h1 class="h3"><i class="bi bi-clipboard-check me-2 text-primary"></i>Compliance Records</h1>
+    <p class="text-muted mb-0">Review compliance status for employers and programs</p>
+  </div>
+  
+  <button class="btn btn-primary shadow-sm d-flex align-items-center gap-2" (click)="showForm = !showForm">
+    <i class="bi" [ngClass]="showForm ? 'bi-x-circle' : 'bi-plus-circle'"></i>
+    {{ showForm ? 'Cancel' : 'Add Record' }}
+  </button>
+</div>
+
+<div class="alert alert-info alert-dismissible fade show" *ngIf="msg">
+  {{ msg }}
+  <button type="button" class="btn-close" (click)="msg = ''"></button>
+</div>
+
+<div class="card shadow-sm rounded-4 border-0 mb-4" style="background-color: #f8fafc;" *ngIf="showForm">
+  <div class="card-body p-4">
+    <h5 class="fw-bold mb-3 text-dark">Create Compliance Record</h5>
+    <div class="row g-3">
+      <div class="col-md-3">
+        <label class="form-label text-muted small fw-bold mb-1">Entity ID (e.g. Employer ID)</label>
+        <input type="number" class="form-control" [(ngModel)]="newRecord.entityId" placeholder="ID Number">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label text-muted small fw-bold mb-1">Entity Type</label>
+        <select class="form-select" [(ngModel)]="newRecord.type">
+          <option value="Employer">Employer</option>
+          <option value="Program">Program</option>
+          <option value="Citizen">Citizen</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label text-muted small fw-bold mb-1">Result</label>
+        <select class="form-select" [(ngModel)]="newRecord.result">
+          <option value="Compliant">Compliant</option>
+          <option value="Non-Compliant">Non-Compliant</option>
+          <option value="Under Review">Under Review</option>
+        </select>
+      </div>
+      <div class="col-md-12">
+        <label class="form-label text-muted small fw-bold mb-1">Inspection Notes</label>
+        <textarea class="form-control" rows="2" [(ngModel)]="newRecord.notes" placeholder="Enter findings from the compliance check..."></textarea>
+      </div>
+      <div class="col-12 mt-3 text-end">
+        <button class="btn btn-success px-4 shadow-sm" (click)="saveRecord()">
+          <i class="bi bi-save me-2"></i>Save Record
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-center py-5 my-5" *ngIf="loading">
+  <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+    <span class="visually-hidden">Loading records...</span>
+  </div>
+  <p class="text-muted mt-3 fw-medium">Loading compliance records...</p>
+</div>
+
+<div class="table-card shadow-sm rounded-4 bg-white overflow-hidden" *ngIf="!loading">
+  <div class="table-responsive">
+    <table class="table table-hover table-borderless align-middle mb-0">
+      <thead class="table-light text-muted" style="font-size: 0.85rem; letter-spacing: 0.5px;">
+        <tr>
+          <th class="ps-4 py-3 text-uppercase">Entity</th>
+          <th class="py-3 text-uppercase">Type</th>
+          <th class="py-3 text-uppercase">Result</th>
+          <th class="py-3 text-uppercase">Date</th>
+          <th class="pe-4 py-3 text-uppercase">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of records" class="border-bottom">
+          
+          <td class="ps-4 py-3">
+            <strong class="text-dark">{{ $any(c).entityName || 'Entity #' + c.entityId }}</strong>
+            <div class="text-muted" style="font-size: 0.75rem;">ID: #{{ c.entityId }}</div>
+          </td>
+          
+          <td class="py-3 text-secondary fw-medium">
+            {{ c.type }}
+          </td>
+          
+          <td class="py-3">
+            <span class="badge rounded-pill px-3 py-2 fw-semibold" [class]="resultBadge(c.result)">
+              <i class="bi me-1" [ngClass]="{
+                'bi-check-circle-fill': c.result === 'Compliant',
+                'bi-x-circle-fill': c.result === 'Non-Compliant',
+                'bi-exclamation-circle-fill': c.result !== 'Compliant' && c.result !== 'Non-Compliant'
+              }"></i>
+              {{ c.result }}
+            </span>
+          </td>
+          
+          <td class="py-3 text-secondary">
+            {{ c.date | date:'MMM dd, yyyy' }}
+          </td>
+          
+          <td class="pe-4 py-3" style="max-width: 250px;">
+            <div class="text-secondary text-truncate" style="font-size: 0.85rem;" [title]="c.notes">
+              {{ c.notes ?? '—' }}
+            </div>
+          </td>
+          
+        </tr>
+
+        <tr *ngIf="!records.length">
+          <td colspan="5" class="text-center py-5">
+            <div class="empty-state">
+              <i class="bi bi-clipboard-x text-light bg-secondary bg-opacity-10 rounded-circle p-4 fs-1 d-inline-flex align-items-center justify-content-center mb-3 text-muted"></i>
+              <h5 class="text-dark fw-bold">No compliance records found</h5>
+              <p class="text-muted mx-auto" style="max-width: 400px;">
+                There are no compliance tracking records available at this time.
+              </p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

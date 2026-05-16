@@ -1,26 +1,165 @@
-<div class="page-header"><h1><i class="bi bi-shield-check me-2"></i>Document Verifications</h1></div>
-<div class="alert alert-success alert-dismissible" *ngIf="msg">{{msg}}<button class="btn-close" (click)="msg=''"></button></div>
-<ul class="nav nav-tabs mb-4">
-  <li class="nav-item"><button class="nav-link" [class.active]="activeTab==='citizen'" (click)="activeTab='citizen'"><i class="bi bi-person me-1"></i>Citizens <span class="badge bg-warning text-dark ms-1">{{citizenDocs.length}}</span></button></li>
-  <li class="nav-item"><button class="nav-link" [class.active]="activeTab==='employer'" (click)="activeTab='employer'"><i class="bi bi-building me-1"></i>Employers <span class="badge bg-primary ms-1">{{employerDocs.length}}</span></button></li>
-</ul>
-<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
-<div class="table-card" *ngIf="!loading && activeTab==='citizen'"><table class="table table-hover mb-0"><thead><tr><th>Citizen</th><th>Type</th><th>File</th><th>Uploaded</th><th>Actions</th></tr></thead>
-  <tbody>
-    <tr *ngFor="let d of citizenDocs"><td><strong>{{d.citizen?.fullName ?? '—'}}</strong></td><td>{{d.documentType}}</td>
-      <td><a *ngIf="d.filePath" [href]="d.filePath" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye me-1"></i>{{d.fileName}}</a><span *ngIf="!d.filePath" class="text-muted">{{d.fileName}}</span></td>
-      <td>{{d.uploadedDate | date:'MMM dd, yyyy'}}</td>
-      <td class="d-flex gap-2"><button class="btn btn-sm btn-success" (click)="verifyCitizen(d.id)"><i class="bi bi-check-lg me-1"></i>Verify</button><button class="btn btn-sm btn-outline-danger" (click)="rejectCitizen(d.id)"><i class="bi bi-x-lg me-1"></i>Reject</button></td>
-    </tr>
-    <tr *ngIf="!citizenDocs.length"><td colspan="5" class="text-center text-muted py-5">No pending citizen documents.</td></tr>
-  </tbody></table>
+<div class="page-header mb-4">
+  <h1 class="h3"><i class="bi bi-shield-check me-2 text-primary"></i>Document Verifications</h1>
+  <p class="text-muted mb-0">Review and verify uploaded compliance documents</p>
 </div>
-<div class="table-card" *ngIf="!loading && activeTab==='employer'"><table class="table table-hover mb-0"><thead><tr><th>Company</th><th>Type</th><th>Uploaded</th><th>Actions</th></tr></thead>
-  <tbody>
-    <tr *ngFor="let d of employerDocs"><td><strong>{{d.employer?.companyName ?? '—'}}</strong></td><td>{{d.docType}}</td>
-      <td>{{d.uploadedDate | date:'MMM dd, yyyy'}}</td>
-      <td class="d-flex gap-2"><button class="btn btn-sm btn-success" (click)="verifyEmployer(d.id)"><i class="bi bi-check-lg me-1"></i>Approve</button><button class="btn btn-sm btn-outline-danger" (click)="rejectEmployer(d.id)"><i class="bi bi-x-lg me-1"></i>Reject</button></td>
-    </tr>
-    <tr *ngIf="!employerDocs.length"><td colspan="4" class="text-center text-muted py-5">No pending employer documents.</td></tr>
-  </tbody></table>
+
+<div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" *ngIf="msg">
+  <i class="bi bi-check-circle-fill me-2"></i>{{ msg }}
+  <button type="button" class="btn-close" (click)="msg=''" aria-label="Close"></button>
+</div>
+
+<ul class="nav nav-tabs border-bottom mb-4">
+  <li class="nav-item">
+    <button class="nav-link fw-medium border-0 border-bottom border-3" 
+            [class.active]="activeTab === 'citizen'" 
+            [class.border-primary]="activeTab === 'citizen'"
+            [class.text-muted]="activeTab !== 'citizen'"
+            [class.border-transparent]="activeTab !== 'citizen'"
+            (click)="activeTab = 'citizen'">
+      <i class="bi bi-person me-1"></i> Citizens 
+      <span class="badge bg-warning text-dark ms-1 rounded-pill">{{ citizenDocs.length }}</span>
+    </button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link fw-medium border-0 border-bottom border-3" 
+            [class.active]="activeTab === 'employer'"
+            [class.border-primary]="activeTab === 'employer'"
+            [class.text-muted]="activeTab !== 'employer'"
+            [class.border-transparent]="activeTab !== 'employer'"
+            (click)="activeTab = 'employer'">
+      <i class="bi bi-building me-1"></i> Employers 
+      <span class="badge bg-primary ms-1 rounded-pill">{{ employerDocs.length }}</span>
+    </button>
+  </li>
+</ul>
+
+<div class="text-center py-5 my-5" *ngIf="loading">
+  <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+    <span class="visually-hidden">Loading documents...</span>
+  </div>
+</div>
+
+<div class="table-card shadow-sm rounded-4 bg-white overflow-hidden" *ngIf="!loading && activeTab === 'citizen'">
+  <div class="table-responsive">
+    <table class="table table-hover table-borderless align-middle mb-0">
+      <thead class="table-light text-muted" style="font-size: 0.85rem; letter-spacing: 0.5px;">
+        <tr>
+          <th class="ps-4 py-3 text-uppercase">Citizen</th>
+          <th class="py-3 text-uppercase">Type</th>
+          <th class="py-3 text-uppercase">File</th>
+          <th class="py-3 text-uppercase">Uploaded</th>
+          <th class="pe-4 py-3 text-uppercase">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of citizenDocs" class="border-bottom">
+          <td class="ps-4 py-3 text-dark fw-medium">{{ d.citizen?.fullName ?? '—' }}</td>
+          <td class="py-3 text-secondary">{{ d.documentType }}</td>
+          
+          <td class="py-3">
+            <a *ngIf="d.filePath" 
+               [href]="getCitizenDocUrl(d.filePath)" 
+               target="_blank" 
+               (click)="markAsViewed(d.id)"
+               class="btn btn-sm btn-light border d-inline-flex align-items-center">
+              <i class="bi bi-eye me-2 text-primary"></i> {{ d.fileName || 'View Document' }}
+            </a>
+            <span *ngIf="!d.filePath" class="text-muted small">
+              <i class="bi bi-file-earmark me-1"></i>{{ d.fileName || 'No File' }}
+            </span>
+          </td>
+          
+          <td class="py-3 text-secondary">{{ d.uploadedDate | date:'MMM dd, yyyy' }}</td>
+          
+          <td class="pe-4 py-3">
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-success d-flex align-items-center shadow-sm" 
+                      (click)="verifyCitizen(d.id)"
+                      [disabled]="!viewedDocs.has(d.id)">
+                <i class="bi bi-check-lg me-1"></i> Verify
+              </button>
+              <button class="btn btn-sm btn-outline-danger d-flex align-items-center bg-white" 
+                      (click)="rejectCitizen(d.id)"
+                      [disabled]="!viewedDocs.has(d.id)">
+                <i class="bi bi-x-lg me-1"></i> Reject
+              </button>
+            </div>
+          </td>
+        </tr>
+        
+        <tr *ngIf="!citizenDocs.length">
+          <td colspan="5" class="text-center py-5">
+            <div class="empty-state">
+              <i class="bi bi-person-check text-light bg-secondary bg-opacity-10 rounded-circle p-4 fs-1 d-inline-flex align-items-center justify-content-center mb-3 text-muted"></i>
+              <h5 class="text-dark fw-bold">No pending documents</h5>
+              <p class="text-muted mx-auto">All citizen compliance documents have been verified.</p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="table-card shadow-sm rounded-4 bg-white overflow-hidden" *ngIf="!loading && activeTab === 'employer'">
+  <div class="table-responsive">
+    <table class="table table-hover table-borderless align-middle mb-0">
+      <thead class="table-light text-muted" style="font-size: 0.85rem; letter-spacing: 0.5px;">
+        <tr>
+          <th class="ps-4 py-3 text-uppercase">Company</th>
+          <th class="py-3 text-uppercase">Type</th>
+          <th class="py-3 text-uppercase">File</th>
+          <th class="py-3 text-uppercase">Uploaded</th>
+          <th class="pe-4 py-3 text-uppercase">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of employerDocs" class="border-bottom">
+          <td class="ps-4 py-3 text-dark fw-medium">{{ d.employer?.companyName ?? '—' }}</td>
+          <td class="py-3 text-secondary">{{ d.docType }}</td>
+          
+          <td class="py-3">
+            <a *ngIf="d.fileURL || d.filePath" 
+               [href]="getEmployerDocUrl(d.fileURL || d.filePath)" 
+               target="_blank" 
+               (click)="markAsViewed(d.id)"
+               class="btn btn-sm btn-light border d-inline-flex align-items-center">
+              <i class="bi bi-eye me-2 text-primary"></i> {{ d.fileName || d.docType + ' Document' }}
+            </a>
+            
+            <span *ngIf="!d.fileURL && !d.filePath" class="text-muted small">
+              <i class="bi bi-file-earmark me-1"></i> No File
+            </span>
+          </td>
+
+          <td class="py-3 text-secondary">{{ d.uploadedDate | date:'MMM dd, yyyy' }}</td>
+          
+          <td class="pe-4 py-3">
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-success d-flex align-items-center shadow-sm" 
+                      (click)="verifyEmployer(d.id)"
+                      [disabled]="!viewedDocs.has(d.id)">
+                <i class="bi bi-check-lg me-1"></i> Approve
+              </button>
+              <button class="btn btn-sm btn-outline-danger d-flex align-items-center bg-white" 
+                      (click)="rejectEmployer(d.id)"
+                      [disabled]="!viewedDocs.has(d.id)">
+                <i class="bi bi-x-lg me-1"></i> Reject
+              </button>
+            </div>
+          </td>
+        </tr>
+        
+        <tr *ngIf="!employerDocs.length">
+          <td colspan="5" class="text-center py-5">
+            <div class="empty-state">
+              <i class="bi bi-building-check text-light bg-secondary bg-opacity-10 rounded-circle p-4 fs-1 d-inline-flex align-items-center justify-content-center mb-3 text-muted"></i>
+              <h5 class="text-dark fw-bold">No pending documents</h5>
+              <p class="text-muted mx-auto">All employer compliance documents have been reviewed.</p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

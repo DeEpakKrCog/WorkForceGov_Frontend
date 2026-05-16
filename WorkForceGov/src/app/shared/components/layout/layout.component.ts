@@ -49,7 +49,6 @@ export class LayoutComponent {
         { label: 'Applications',     icon: 'bi-file-text',         route: '/labor-officer/applications' },
         { label: 'Audits',           icon: 'bi-clipboard-data',    route: '/labor-officer/audits' },
         { label: 'Compliance',       icon: 'bi-check-square',      route: '/labor-officer/compliance' },
-        { label: 'Reports',          icon: 'bi-bar-chart',         route: '/labor-officer/reports' },
       ],
       ComplianceOfficer: [
         { label: 'Dashboard',        icon: 'bi-speedometer2',      route: '/compliance-officer/dashboard' },

@@ -56,7 +56,7 @@ export const routes: Routes = [
     { path: 'applications',           loadComponent: () => import('./features/labor-officer/components/applications/applications.component').then(m => m.LOApplicationsComponent) },
     { path: 'audits',                 loadComponent: () => import('./features/labor-officer/components/audits/audits.component').then(m => m.LOAuditsComponent) },
     { path: 'compliance',             loadComponent: () => import('./features/labor-officer/components/compliance/compliance.component').then(m => m.LOComplianceComponent) },
-    { path: 'reports',                loadComponent: () => import('./features/labor-officer/components/reports/reports.component').then(m => m.LOReportsComponent) },
+    
   ]},
 
   // ── Compliance Officer ────────────────────────────────────────────────────────

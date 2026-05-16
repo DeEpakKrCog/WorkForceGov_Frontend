@@ -171,6 +171,8 @@ export interface EmployerDocument {
   uploadedDate: string;
   verificationStatus: string;
   employer?: Employer;
+  filePath?: string;
+  
 }
 
 

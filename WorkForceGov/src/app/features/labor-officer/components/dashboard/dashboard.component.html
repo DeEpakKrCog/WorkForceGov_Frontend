@@ -1,34 +1,84 @@
-<div class="page-header"><h1>Labor Officer Dashboard</h1><p>Document verification and application review</p></div>
-<div class="alert alert-success alert-dismissible" *ngIf="msg">{{msg}}<button class="btn-close" (click)="msg=''"></button></div>
-<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
-<ng-container *ngIf="data">
-  <div class="row g-3 mb-4">
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:#d97706;"><i class="bi bi-file-earmark-check"></i></div><div class="stat-value">{{data.pendingDocuments}}</div><div class="stat-label">Pending Docs</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="bi bi-file-text"></i></div><div class="stat-value">{{data.pendingApplications}}</div><div class="stat-label">Pending Apps</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="bi bi-check-circle"></i></div><div class="stat-value">{{data.approvedApplications}}</div><div class="stat-label">Approved</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#fee2e2;color:#dc2626;"><i class="bi bi-x-circle"></i></div><div class="stat-value">{{data.rejectedApplications}}</div><div class="stat-label">Rejected</div></div></div>
+<div class="page-header mb-4">
+  <h1 class="h3">Labor Officer Dashboard</h1>
+  <p class="text-muted mb-0">Document verification and application review</p>
+</div>
+
+<div class="text-center py-5 my-5" *ngIf="loading">
+  <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+    <span class="visually-hidden">Loading dashboard...</span>
   </div>
-  <div class="row g-4">
-    <div class="col-lg-8"><div class="table-card">
-      <div class="card-header-custom"><span><i class="bi bi-file-earmark-check me-2"></i>Pending Document Verifications</span><a routerLink="/labor-officer/document-verifications" class="btn btn-sm btn-accent">View All</a></div>
-      <table class="table table-hover mb-0"><thead><tr><th>Citizen</th><th>Type</th><th>Uploaded</th><th>Actions</th></tr></thead>
-      <tbody>
-        <tr *ngFor="let d of data.pendingDocs">
-          <td>{{d.citizen?.fullName}}</td><td>{{d.documentType}}</td><td>{{d.uploadedDate | date:'MMM dd'}}</td>
-          <td class="d-flex gap-2">
-            <button class="btn btn-sm btn-success" (click)="verify(d.id)"><i class="bi bi-check me-1"></i>Verify</button>
-            <button class="btn btn-sm btn-outline-danger" (click)="reject(d.id)"><i class="bi bi-x me-1"></i>Reject</button>
-          </td>
-        </tr>
-        <tr *ngIf="!data.pendingDocs.length"><td colspan="4" class="text-center text-muted py-4">No pending documents.</td></tr>
-      </tbody></table>
-    </div></div>
-    <div class="col-lg-4"><div class="table-card">
-      <div class="card-header-custom"><span><i class="bi bi-bell me-2"></i>Notifications</span></div>
-      <div style="padding:8px 16px;">
-        <div *ngFor="let n of data.notifications" style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:.85rem;">{{n.message}}<br/><span style="font-size:.72rem;color:#94a3b8;">{{n.createdDate | date:'MMM dd'}}</span></div>
-        <div *ngIf="!data.notifications.length" class="text-muted text-center py-3">No notifications.</div>
+</div>
+
+<ng-container *ngIf="data">
+  
+  <div class="row g-3 mb-4">
+    <div class="col-sm-4 col-xl-4">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fef3c7; color:#d97706;"><i class="bi bi-file-earmark-check"></i></div>
+        <div class="stat-value">{{ data.pendingDocuments }}</div>
+        <div class="stat-label">Pending Docs</div>
       </div>
-    </div></div>
+    </div>
+    
+    <div class="col-sm-4 col-xl-4">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#dcfce7; color:#16a34a;"><i class="bi bi-check-circle"></i></div>
+        <div class="stat-value">{{ data.approvedApplications }}</div>
+        <div class="stat-label">Approved</div>
+      </div>
+    </div>
+    
+    <div class="col-sm-4 col-xl-4">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fee2e2; color:#dc2626;"><i class="bi bi-x-circle"></i></div>
+        <div class="stat-value">{{ data.rejectedApplications }}</div>
+        <div class="stat-label">Rejected</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-12">
+      <div class="table-card shadow-sm rounded-4 bg-white overflow-hidden">
+        <div class="card-header-custom border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
+          <span class="fw-bold d-flex align-items-center">
+            <i class="bi bi-file-earmark-check me-2 text-muted"></i>
+            Pending Document Verifications
+          </span>
+          <a routerLink="/labor-officer/document-verifications" class="btn btn-sm btn-accent">View All</a>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="table table-hover table-borderless align-middle mb-0">
+            <thead class="table-light text-muted" style="font-size: 0.85rem; letter-spacing: 0.5px;">
+              <tr>
+                <th class="ps-4 py-3 text-uppercase">Citizen</th>
+                <th class="py-3 text-uppercase">Type</th>
+                <th class="py-3 text-uppercase">Uploaded</th>
+                <th class="pe-4 py-3 text-uppercase">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let d of data.pendingDocs" class="border-bottom">
+                <td class="ps-4 py-3 text-dark fw-medium">{{ d.citizen?.fullName ?? '—' }}</td>
+                <td class="py-3 text-secondary">{{ d.documentType }}</td>
+                <td class="py-3 text-secondary">{{ d.uploadedDate | date:'MMM dd' }}</td>
+                <td class="pe-4 py-3">
+                  <a routerLink="/labor-officer/document-verifications" class="btn btn-sm btn-light border text-primary">
+                    <i class="bi bi-box-arrow-up-right me-1"></i> Review
+                  </a>
+                </td>
+              </tr>
+              <tr *ngIf="!data.pendingDocs.length">
+                <td colspan="4" class="text-center text-muted py-5">
+                  <i class="bi bi-file-earmark-check fs-2 d-block mb-2 text-light"></i>
+                  No pending documents to review.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-container>
