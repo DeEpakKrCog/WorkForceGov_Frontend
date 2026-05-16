@@ -75,7 +75,7 @@ export const routes: Routes = [
     { path: 'audit-reports',         loadComponent: () => import('./features/gov-auditor/components/audit-reports/audit-reports.component').then(m => m.GAAuditReportsComponent) },
     { path: 'compliance-monitoring', loadComponent: () => import('./features/gov-auditor/components/compliance-monitoring/compliance-monitoring.component').then(m => m.GAComplianceMonitoringComponent) },
     { path: 'workforce-programs',    loadComponent: () => import('./features/gov-auditor/components/workforce-programs/workforce-programs.component').then(m => m.GAWorkforceProgramsComponent) },
-    { path: 'alerts',                loadComponent: () => import('./features/gov-auditor/components/alerts/alerts.component').then(m => m.GAAlertsComponent) },
+    
   ]},
 
   // ── Program Manager ──────────────────────────────────────────────────────────

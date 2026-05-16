@@ -1,7 +1,45 @@
-<div class="page-header"><h1><i class="bi bi-diagram-3 me-2"></i>Workforce Programs</h1></div>
-<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
-<div class="table-card" *ngIf="!loading"><table class="table table-hover mb-0"><thead><tr><th>Program Name</th><th>Type</th><th>Budget</th><th>Start</th><th>End</th><th>Status</th></tr></thead>
-<tbody>
-  <tr *ngFor="let p of programs"><td><strong>{{p.programName}}</strong></td><td>{{p.programType}}</td><td class="fw-bold" style="color:#16a34a;">${{p.totalBudget | number:'1.0-0'}}</td><td>{{p.startDate | date:'MMM dd, yyyy'}}</td><td>{{p.endDate ? (p.endDate | date:'MMM dd, yyyy') : '—'}}</td><td><span class="badge-status" [class.bs-success]="p.status==='Active'" [class.bs-secondary]="p.status!=='Active'">{{p.status}}</span></td></tr>
-  <tr *ngIf="!programs.length"><td colspan="6" class="text-center text-muted py-4">No programs found.</td></tr>
-</tbody></table></div>
+<div class="page-header">
+  <h1><i class="bi bi-diagram-3 me-2"></i>Workforce Programs</h1>
+</div>
+
+<div class="text-center py-5" *ngIf="loading">
+  <div class="spinner-border text-primary"></div>
+</div>
+
+<div class="table-card" *ngIf="!loading">
+  <table class="table table-hover mb-0">
+    <thead>
+      <tr>
+        <th>Program Name</th>
+        <th>Type</th>
+        <th>Budget</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of programs">
+        <td><strong>{{ p.programName }}</strong></td>
+        <td>{{ p.programType }}</td>
+        <td class="fw-bold" style="color: #16a34a;">
+          ${{ p.totalBudget | number:'1.0-0' }}
+        </td>
+        <td>{{ p.startDate | date:'MMM dd, yyyy' }}</td>
+        <td>{{ p.endDate ? (p.endDate | date:'MMM dd, yyyy') : '—' }}</td>
+        <td>
+          <span class="badge-status" 
+                [class.bs-success]="p.status === 'Active'" 
+                [class.bs-secondary]="p.status !== 'Active'">
+            {{ p.status }}
+          </span>
+        </td>
+      </tr>
+      <tr *ngIf="!programs.length">
+        <td colspan="6" class="text-center text-muted py-4">
+          No programs found.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

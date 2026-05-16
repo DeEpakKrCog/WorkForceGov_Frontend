@@ -61,7 +61,6 @@ export class LayoutComponent {
         { label: 'Audit Reports',    icon: 'bi-clipboard-data',    route: '/gov-auditor/audit-reports' },
         { label: 'Compliance',       icon: 'bi-shield-check',      route: '/gov-auditor/compliance-monitoring' },
         { label: 'Programs',         icon: 'bi-diagram-3',         route: '/gov-auditor/workforce-programs' },
-        { label: 'Alerts',           icon: 'bi-bell',              route: '/gov-auditor/alerts' },
       ],
       ProgramManager: [
         { label: 'Dashboard',        icon: 'bi-speedometer2',      route: '/program-manager/dashboard' },
