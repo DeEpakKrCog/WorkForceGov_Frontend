@@ -16,7 +16,7 @@ export class EmployerProfileComponent implements OnInit {
   loading = signal(false);
   saved = signal(false);
 
-  // 1. ADD THIS: Create a variable to store the original full profile
+  isNewProfile = false;
   fullProfile: any = {};
 
   industries = [
@@ -28,6 +28,7 @@ export class EmployerProfileComponent implements OnInit {
   form = this.fb.group({
     companyName: [''],
     industry: [''],
+    contactInfo: [''], // 👈 Added ContactInfo field for the email
     address: [''],
     phoneNumber: [''], 
     website: [''],     
@@ -37,35 +38,67 @@ export class EmployerProfileComponent implements OnInit {
   ngOnInit(): void {
     this.svc.getProfile().subscribe({
       next: (p) => {
-        // 2. ADD THIS: Save the complete profile (including Id, Status, etc.)
-        this.fullProfile = p; 
-        
-        this.form.patchValue(p as any);
+        if (p) {
+          this.fullProfile = p; 
+          this.form.patchValue(p as any);
+          this.isNewProfile = false;
+        }
       },
-      error: (err) => console.error('Failed to load profile:', err)
+      error: (err: any) => { 
+        if (err.status === 404 || err.status === 204) {
+          console.log('New employer detected. Form ready for fresh data.');
+          this.isNewProfile = true;
+        } else {
+          console.error('Failed to load profile:', err);
+        }
+      }
     });
   }
 
   submit(): void {
+    if (this.form.invalid) return;
+
     this.loading.set(true);
     
-    // 3. ADD THIS: Merge the full profile with the updated form values
     const payload = {
       ...this.fullProfile,
       ...this.form.value
     };
 
-    // Send the merged payload instead of just the form values
-    this.svc.updateProfile(payload).subscribe({
-      next: () => {
-        this.loading.set(false);
-        this.saved.set(true);
-        setTimeout(() => this.saved.set(false), 3000);
-      },
-      error: (err) => {
-        this.loading.set(false);
-        console.error('Update failed:', err);
-      }
-    });
+    if (this.isNewProfile) {
+      
+      this.svc.registerEmployer(payload).subscribe({
+        next: (res: any) => { 
+          this.loading.set(false);
+          this.saved.set(true);
+          this.isNewProfile = false; 
+          
+          if (res.employer) {
+             this.fullProfile = res.employer; 
+          }
+          
+          setTimeout(() => this.saved.set(false), 3000);
+        },
+        error: (err: any) => { 
+          this.loading.set(false);
+          console.error('Registration failed:', err);
+        }
+      });
+
+    } else {
+      
+      this.svc.updateProfile(payload).subscribe({
+        next: () => {
+          this.loading.set(false);
+          this.saved.set(true);
+          setTimeout(() => this.saved.set(false), 3000);
+        },
+        error: (err: any) => { 
+          this.loading.set(false);
+          console.error('Update failed:', err);
+        }
+      });
+      
+    }
   }
 }

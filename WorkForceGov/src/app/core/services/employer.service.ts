@@ -30,6 +30,7 @@ export class EmployerService {
     return this.http.get<Employer>(`${this.base}/employer/profile`);
   }
 
+  // 👉 This is the method we need to call from the component
   registerEmployer(data: Partial<Employer>): Observable<Employer> {
     return this.http.post<Employer>(`${this.base}/employer/profile/register`, data);
   }
@@ -54,12 +55,9 @@ export class EmployerService {
     return this.http.post<JobOpening>(`${this.base}/employer/jobs`, data);
   }
 
-  // employer.service.ts
-
-updateJob(id: number, data: Partial<JobOpening>): Observable<JobOpening> {
-  // This constructs the URL: .../api/employer/jobs/6
-  return this.http.put<JobOpening>(`${this.base}/employer/jobs/${id}`, data);
-}
+  updateJob(id: number, data: Partial<JobOpening>): Observable<JobOpening> {
+    return this.http.put<JobOpening>(`${this.base}/employer/jobs/${id}`, data);
+  }
 
   closeJob(id: number): Observable<any> {
     return this.http.put(`${this.base}/employer/jobs/${id}/close`, {});
@@ -77,12 +75,8 @@ updateJob(id: number, data: Partial<JobOpening>): Observable<JobOpening> {
     return this.http.get<Application>(`${this.base}/employer/applications/${id}`);
   }
 
-  /**
-   * Updates application status.
-   * Matches the backend [HttpPut("applications/{appId}/status")]
-   */
   updateApplication(id: number, status: string, notes: string): Observable<any> {
-    const params = { status }; // Passed as QueryParam in your Controller
+    const params = { status }; 
     return this.http.put(`${this.base}/employer/applications/${id}/status`, JSON.stringify(notes), {
       params,
       headers: { 'Content-Type': 'application/json' }
@@ -98,7 +92,6 @@ updateJob(id: number, data: Partial<JobOpening>): Observable<JobOpening> {
   }
 
   uploadDocument(fd: FormData): Observable<any> {
-    // Note: HttpClient automatically sets boundary for FormData
     return this.http.post(`${this.base}/employer/documents`, fd);
   }
 

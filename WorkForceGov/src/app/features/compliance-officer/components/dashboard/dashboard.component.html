@@ -1,28 +1,141 @@
-<div class="page-header"><h1>Compliance Officer Dashboard</h1></div>
-<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="page-header">
+  <h1>Compliance Officer Dashboard</h1>
+</div>
+
+<div class="text-center py-5" *ngIf="loading">
+  <div class="spinner-border text-primary"></div>
+</div>
+
 <ng-container *ngIf="data">
   <div class="row g-3 mb-4">
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#fef3c7;color:#d97706;"><i class="bi bi-building-check"></i></div><div class="stat-value">{{data.pendingReviews}}</div><div class="stat-label">Pending Reviews</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#fee2e2;color:#dc2626;"><i class="bi bi-chat-square-text"></i></div><div class="stat-value">{{data.pendingComplaints}}</div><div class="stat-label">Open Complaints</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#ede9fe;color:#7c3aed;"><i class="bi bi-exclamation-triangle"></i></div><div class="stat-value">{{data.totalViolations}}</div><div class="stat-label">Violations</div></div></div>
-    <div class="col-sm-6 col-xl-3"><div class="stat-card"><div class="stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="bi bi-clipboard-check"></i></div><div class="stat-value">{{data.totalInspections}}</div><div class="stat-label">Inspections Done</div></div></div>
+    <!-- Pending Reviews -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #fef3c7; color: #d97706;">
+          <i class="bi bi-building-check"></i>
+        </div>
+        <div class="stat-value">{{ data.pendingReviews }}</div>
+        <div class="stat-label">Pending Reviews</div>
+      </div>
+    </div>
+
+    <!-- Open Complaints -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #fee2e2; color: #dc2626;">
+          <i class="bi bi-chat-square-text"></i>
+        </div>
+        <div class="stat-value">{{ data.pendingComplaints }}</div>
+        <div class="stat-label">Open Complaints</div>
+      </div>
+    </div>
+
+    <!-- Violations -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #ede9fe; color: #7c3aed;">
+          <i class="bi bi-exclamation-triangle"></i>
+        </div>
+        <div class="stat-value">{{ data.totalViolations }}</div>
+        <div class="stat-label">Violations</div>
+      </div>
+    </div>
+
+    <!-- Inspections Done -->
+    <div class="col-sm-6 col-xl-3">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #dcfce7; color: #16a34a;">
+          <i class="bi bi-clipboard-check"></i>
+        </div>
+        <div class="stat-value">{{ data.totalInspections }}</div>
+        <div class="stat-label">Inspections Done</div>
+      </div>
+    </div>
   </div>
+
   <div class="row g-4">
-    <div class="col-lg-6"><div class="table-card">
-      <div class="card-header-custom"><span><i class="bi bi-clipboard-data me-2"></i>Recent Compliance</span><a routerLink="/compliance-officer/compliance-reports" class="btn btn-sm btn-accent">View All</a></div>
-      <table class="table table-hover mb-0"><thead><tr><th>Entity</th><th>Type</th><th>Result</th><th>Date</th></tr></thead>
-      <tbody>
-        <tr *ngFor="let r of data.recentRecords"><td>#{{r.entityId}}</td><td>{{r.type}}</td><td><span class="badge-status" [class]="resultBadge(r.result)">{{r.result}}</span></td><td>{{r.date | date:'MMM dd'}}</td></tr>
-        <tr *ngIf="!data.recentRecords.length"><td colspan="4" class="text-center text-muted py-4">No records.</td></tr>
-      </tbody></table>
-    </div></div>
-    <div class="col-lg-6"><div class="table-card">
-      <div class="card-header-custom"><span><i class="bi bi-chat-square-text me-2"></i>Recent Complaints</span><a routerLink="/compliance-officer/investigate-complaint" class="btn btn-sm btn-accent">View All</a></div>
-      <table class="table table-hover mb-0"><thead><tr><th>Description</th><th>Status</th><th>Date</th></tr></thead>
-      <tbody>
-        <tr *ngFor="let c of data.recentComplaints"><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{c.complaintDescription}}</td><td><span class="badge-status" [class]="statusBadge(c.status)">{{c.status}}</span></td><td>{{c.submittedDate | date:'MMM dd'}}</td></tr>
-        <tr *ngIf="!data.recentComplaints.length"><td colspan="3" class="text-center text-muted py-4">No complaints.</td></tr>
-      </tbody></table>
-    </div></div>
+    <!-- Recent Compliance Table -->
+    <div class="col-lg-6">
+      <div class="table-card">
+        <div class="card-header-custom">
+          <span>
+            <i class="bi bi-clipboard-data me-2"></i>
+            Recent Compliance
+          </span>
+          <a routerLink="/compliance-officer/compliance-reports" class="btn btn-sm btn-accent">
+            View All
+          </a>
+        </div>
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Entity</th>
+              <th>Type</th>
+              <th>Result</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of data.recentRecords">
+              <td>#{{ r.entityId }}</td>
+              <td>{{ r.type }}</td>
+              <td>
+                <span class="badge-status" [class]="resultBadge(r.result)">
+                  {{ r.result }}
+                </span>
+              </td>
+              <td>{{ r.date | date: 'MMM dd' }}</td>
+            </tr>
+            <tr *ngIf="!data.recentRecords.length">
+              <td colspan="4" class="text-center text-muted py-4">
+                No records.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Recent Complaints Table -->
+    <div class="col-lg-6">
+      <div class="table-card">
+        <div class="card-header-custom">
+          <span>
+            <i class="bi bi-chat-square-text me-2"></i>
+            Recent Complaints
+          </span>
+          <a routerLink="/compliance-officer/investigate-complaint" class="btn btn-sm btn-accent">
+            View All
+          </a>
+        </div>
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of data.recentComplaints">
+              <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ c.complaintDescription }}
+              </td>
+              <td>
+                <span class="badge-status" [class]="statusBadge(c.status)">
+                  {{ c.status }}
+                </span>
+              </td>
+              <td>{{ c.submittedDate | date: 'MMM dd' }}</td>
+            </tr>
+            <tr *ngIf="!data.recentComplaints.length">
+              <td colspan="3" class="text-center text-muted py-4">
+                No complaints.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </ng-container>

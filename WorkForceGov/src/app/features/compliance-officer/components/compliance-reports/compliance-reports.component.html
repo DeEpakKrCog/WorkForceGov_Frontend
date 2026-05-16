@@ -1,20 +1,92 @@
-<div class="page-header"><h1><i class="bi bi-bar-chart me-2"></i>Compliance Reports</h1></div>
-<div class="text-center py-5" *ngIf="loading"><div class="spinner-border text-primary"></div></div>
+<div class="page-header">
+  <h1>
+    <i class="bi bi-bar-chart me-2"></i>
+    Compliance Reports
+  </h1>
+</div>
+
+<div class="text-center py-5" *ngIf="loading">
+  <div class="spinner-border text-primary"></div>
+</div>
+
 <div class="row g-4" *ngIf="!loading">
-  <div class="col-lg-7"><div class="table-card">
-    <div class="card-header-custom"><span><i class="bi bi-clipboard-data me-2"></i>Compliance Records</span></div>
-    <table class="table table-hover mb-0"><thead><tr><th>Entity</th><th>Type</th><th>Result</th><th>Date</th><th>Notes</th></tr></thead>
-    <tbody>
-      <tr *ngFor="let r of records"><td>#{{r.entityId}}</td><td>{{r.type}}</td><td><span class="badge-status" [class]="resultBadge(r.result)">{{r.result}}</span></td><td>{{r.date | date:'MMM dd, yyyy'}}</td><td style="font-size:.82rem;color:#64748b;">{{r.notes ?? '—'}}</td></tr>
-      <tr *ngIf="!records.length"><td colspan="5" class="text-center text-muted py-4">No records.</td></tr>
-    </tbody></table>
-  </div></div>
-  <div class="col-lg-5"><div class="table-card">
-    <div class="card-header-custom"><span><i class="bi bi-file-earmark-bar-graph me-2"></i>Generated Reports</span></div>
-    <table class="table table-hover mb-0"><thead><tr><th>Name</th><th>Type</th><th>Date</th></tr></thead>
-    <tbody>
-      <tr *ngFor="let r of reports"><td><strong>{{r.reportName}}</strong></td><td><span class="badge-status bs-info">{{r.reportType}}</span></td><td>{{r.generatedDate | date:'MMM dd'}}</td></tr>
-      <tr *ngIf="!reports.length"><td colspan="3" class="text-center text-muted py-4">No reports.</td></tr>
-    </tbody></table>
-  </div></div>
+  <!-- Compliance Records Table -->
+  <div class="col-lg-7">
+    <div class="table-card">
+      <div class="card-header-custom">
+        <span>
+          <i class="bi bi-clipboard-data me-2"></i>
+          Compliance Records
+        </span>
+      </div>
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Entity</th>
+            <th>Type</th>
+            <th>Result</th>
+            <th>Date</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of records">
+            <td>#{{ r.entityId }}</td>
+            <td>{{ r.type }}</td>
+            <td>
+              <span class="badge-status" [class]="resultBadge(r.result)">
+                {{ r.result }}
+              </span>
+            </td>
+            <td>{{ r.date | date: 'MMM dd, yyyy' }}</td>
+            <td style="font-size: 0.82rem; color: #64748b;">
+              {{ r.notes ?? '—' }}
+            </td>
+          </tr>
+          <tr *ngIf="!records.length">
+            <td colspan="5" class="text-center text-muted py-4">
+              No records.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Generated Reports Table -->
+  <div class="col-lg-5">
+    <div class="table-card">
+      <div class="card-header-custom">
+        <span>
+          <i class="bi bi-file-earmark-bar-graph me-2"></i>
+          Generated Reports
+        </span>
+      </div>
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of reports">
+            <td>
+              <strong>{{ r.reportName }}</strong>
+            </td>
+            <td>
+              <span class="badge-status bs-info">{{ r.reportType }}</span>
+            </td>
+            <td>{{ r.generatedDate | date: 'MMM dd' }}</td>
+          </tr>
+          <tr *ngIf="!reports.length">
+            <td colspan="3" class="text-center text-muted py-4">
+              No reports.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
