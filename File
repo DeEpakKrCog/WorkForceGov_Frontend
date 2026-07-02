@@ -1,0 +1,235 @@
+\documentclass[12pt,oneside,letterpaper,english]{article}
+
+% ============================================================
+% ENCODING & FONTS
+% (Only ONE input encoding. The original loaded both latin1 and
+%  utf8, which conflict; utf8 is kept.)
+% ============================================================
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% ============================================================
+% PAGE GEOMETRY & LANGUAGE
+% ============================================================
+\usepackage[margin=2.25cm,headheight=26pt,includeheadfoot]{geometry}
+\usepackage[english]{babel}
+
+% ============================================================
+% PACKAGES
+% (xcolor already provides everything from color, so the plain
+%  color package and the duplicate booktabs/caption line were
+%  removed.)
+% ============================================================
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage{changepage}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{caption}
+\usepackage{tocloft}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{indentfirst}
+\usepackage[flushleft]{threeparttable}
+\usepackage{datetime2}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{mdframed}
+\usepackage{tcolorbox}
+\usepackage{tabularx}
+\usepackage{makecell}
+\usepackage{hyperref} % loaded last, as recommended for hyperref
+
+\tcbuselibrary{skins,breakable}
+
+% ============================================================
+% COLOR DEFINITIONS
+% ============================================================
+\definecolor{codebg}{RGB}{245,247,250}
+\definecolor{codeframe}{RGB}{46,117,182}
+\definecolor{codecomment}{RGB}{100,120,140}
+\definecolor{codekey}{RGB}{0,90,170}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{darkblue}{RGB}{28,69,115}
+\definecolor{midblue}{RGB}{46,117,182}
+\definecolor{lightblue}{RGB}{208,228,245}
+\definecolor{darkgray}{RGB}{64,64,64}
+\definecolor{bashgreen}{RGB}{0,128,0}
+\definecolor{bashorange}{RGB}{180,80,0}
+
+% ============================================================
+% CODE LISTING STYLES
+% ============================================================
+\lstdefinestyle{bashstyle}{
+    backgroundcolor=\color{codebg},
+    basicstyle=\footnotesize\ttfamily,
+    breaklines=true,
+    breakatwhitespace=true,
+    frame=single,
+    framesep=4pt,
+    rulecolor=\color{codeframe},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=6pt,
+    showstringspaces=false,
+    keywordstyle=\color{codekey}\bfseries,
+    commentstyle=\color{codecomment}\itshape,
+    stringstyle=\color{codestring},
+    tabsize=2,
+    captionpos=b,
+    morekeywords={sudo,apt,systemctl,echo,read,case,esac,function,while,
+        do,done,if,then,elif,else,fi,for,in,return,exit,trap,
+        clear,sleep,kill,eval,local,true,false,touch,cp,mv,lp,
+        who,wc,date,type,xinput,wmctrl,sed,grep},
+}
+
+\lstdefinestyle{sqlstyle}{
+    backgroundcolor=\color{codebg},
+    basicstyle=\footnotesize\ttfamily,
+    breaklines=true,
+    frame=single,
+    framesep=4pt,
+    rulecolor=\color{codeframe},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=6pt,
+    showstringspaces=false,
+    keywordstyle=\color{codekey}\bfseries,
+    commentstyle=\color{codecomment}\itshape,
+    stringstyle=\color{codestring},
+    captionpos=b,
+    morekeywords={SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,ALTER,TABLE,
+        DATABASE,USER,GRANT,REVOKE,FLUSH,PRIVILEGES,SET,GLOBAL,
+        INSTALL,PLUGIN,SHOW,STATUS,LIKE,FROM,WHERE,ON,TO,BY,
+        IDENTIFIED,COMPONENT,ALL,INDEX,VIEW,PROCEDURE},
+}
+
+\lstset{style=bashstyle}
+
+% ============================================================
+% TCOLORBOX ENVIRONMENTS
+% ============================================================
+\newtcolorbox{notebox}{
+    colback=blue!5!white,
+    colframe=midblue,
+    fonttitle=\bfseries,
+    title=Note,
+    breakable,
+    left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+
+\newtcolorbox{warningbox}{
+    colback=red!5!white,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Warning,
+    breakable,
+    left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+
+\newtcolorbox{stepbox}[1]{
+    colback=gray!6!white,
+    colframe=darkblue,
+    fonttitle=\bfseries\small,
+    title=Step #1,
+    breakable,
+    left=8pt, right=8pt, top=6pt, bottom=6pt
+}
+
+\newtcolorbox{cmdbox}[1]{
+    colback=darkblue!5!white,
+    colframe=darkblue,
+    fonttitle=\bfseries\small\color{white},
+    coltitle=white,
+    attach boxed title to top left={yshift=-2mm, xshift=4mm},
+    boxed title style={colback=darkblue},
+    title=Command: \texttt{#1},
+    breakable,
+    left=6pt, right=6pt, top=10pt, bottom=6pt
+}
+
+% ============================================================
+% HEADER / FOOTER
+% ============================================================
+\title{Cyber Security Assessment of DDCS}
+\makeatletter\let\Title\@title\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{1pt}
+\renewcommand{\rmdefault}{ptm}
+\lhead{\Title}
+\rhead{\nouppercase{\rightmark}}
+\cfoot{\thepage}
+\setlength\headheight{26pt}   % matches geometry's headheight to avoid fancyhdr warning
+\setlength{\footskip}{50pt}
+\setlength{\parindent}{2em}
+
+% ============================================================
+% DOCUMENT START
+% ============================================================
+\begin{document}
+\pagenumbering{roman}
+
+% ============================================================
+% TITLE PAGE
+% ============================================================
+\begin{titlepage}
+\centering
+
+% --- Top logos row ---
+% ---------------------------------------------------------------
+% IMAGE 1 (left)  : IGCAR logo
+% IMAGE 2 (right) : BIT Mesra logo
+% Put both image files in a "root/" folder next to this .tex file
+% (or edit the paths below to point at your files).
+% ---------------------------------------------------------------
+\begin{minipage}{0.49\textwidth}
+    \flushleft
+    \includegraphics[width=3cm]{root/Indira_Gandhi_Centre_for_Atomic_Research_Logo.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+    \flushright
+    \includegraphics[width=3cm]{root/Birla_Institute_of_Technology_Mesra.png}
+\end{minipage}
+
+\vspace{0.6cm}
+\rule{\linewidth}{1pt}
+\vspace{0.5cm}
+
+{\LARGE\bfseries Birla Institute of Technology, Mesra\par}
+\vspace{0.2cm}
+
+% -----------------------------------------------------------------
+% NOTE: the uploaded source was cut off at this point. The lines
+% below are placeholders added only so the title page is complete
+% and the file compiles. Replace them with the real content from
+% your original document.
+% -----------------------------------------------------------------
+\vspace{2cm}
+{\Huge\bfseries \Title\par}   % uses the \title{} defined above
+\vspace{1cm}
+\rule{\linewidth}{1pt}
+
+\vfill
+{\large \today\par}
+
+\end{titlepage}
+
+% ============================================================
+% NOTE: paste the rest of your report body here, before
+% \end{document}.
+% ============================================================
+\clearpage
+\pagenumbering{arabic}
+
+\end{document}
